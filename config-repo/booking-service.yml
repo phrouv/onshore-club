@@ -1,0 +1,15 @@
+# =============================================================================
+# BOOKING SERVICE CONFIG
+# =============================================================================
+# Fetched ONLY by booking-service from Config Server.
+# Common settings (eureka, jpa defaults) come from application.yml automatically.
+# =============================================================================
+
+server:
+  port: 5003
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:3305/onshore_booking_db
+    username: postgres
+    password: root

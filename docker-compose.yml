@@ -1,0 +1,554 @@
+# =============================================================================
+# Airline Microservices — Docker Compose
+# =============================================================================
+# ONLY API GATEWAY (Port 5000) is exposed externally
+# All other services are internal only
+# =============================================================================
+
+services:
+  # ===========================================================================
+  # INFRASTRUCTURE
+  # ===========================================================================
+
+  # ========== USER DB ==========
+  userdb:
+    image: postgres:18-alpine
+    container_name: userdb
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    ports:
+      - "127.0.0.1:3302:5432" # LOCALHOST ONLY - for debugging if needed
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: onshore_user_db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - onshore
+
+  # ========== PAYMENT DB ==========
+  paymentdb:
+    image: postgres:18-alpine
+    container_name: paymentdb
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    ports:
+      - "127.0.0.1:3303:5432" # LOCALHOST ONLY
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: onshore_payment_db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - onshore
+
+  # ========== BOOKING DB ==========
+  bookingdb:
+    image: postgres:18-alpine
+    container_name: bookingdb
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    ports:
+      - "127.0.0.1:3305:5432" # LOCALHOST ONLY
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: onshore_booking_db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - onshore
+
+  # ========== PARTNER DB ==========
+  partnerdb:
+    image: postgres:18-alpine
+    container_name: partnerdb
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    ports:
+      - "127.0.0.1:3304:5432" # LOCALHOST ONLY
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: onshore_partner_db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - onshore
+
+  # ========== PLANNING DB ==========
+  planningdb:
+    image: postgres:18-alpine
+    container_name: planningdb
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    ports:
+      - "127.0.0.1:3306:5432" # LOCALHOST ONLY
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: onshore_planning_db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - onshore
+
+  # ========== CREDIT DB ==========
+  creditdb:
+    image: postgres:18-alpine
+    container_name: creditdb
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    ports:
+      - "127.0.0.1:3307:5432" # LOCALHOST ONLY
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: onshore_credit_db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - onshore
+
+  # ========== PAYOUT DB ==========
+  payoutdb:
+    image: postgres:18-alpine
+    container_name: payoutdb
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    ports:
+      - "127.0.0.1:3308:5432" # LOCALHOST ONLY
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: onshore_payout_db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - onshore
+
+  # ========== ADMIN DB ==========
+  admindb:
+    image: postgres:18-alpine
+    container_name: admindb
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    ports:
+      - "127.0.0.1:3309:5432" # LOCALHOST ONLY
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: onshore_admin_db
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 10s
+    networks:
+      - onshore
+
+  # ===========================================================================
+  # PGADMIN — Web-based PostgreSQL management tool
+  # ===========================================================================
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 5050
+    ports:
+      - "127.0.0.1:5050:5050" # LOCALHOST ONLY
+    networks:
+      - onshore
+    restart: unless-stopped
+
+  # ===========================================================================
+  # REDIS — shared cache for api-gateway
+  # ===========================================================================
+  redis:
+    image: redis:latest
+    container_name: onshore-redis
+    mem_limit: 256m
+    mem_reservation: 128m
+    cpus: 0.25
+    # NO PORTS EXPOSED - Internal only
+    command: redis-server --maxmemory 200mb --maxmemory-policy allkeys-lru --save ""
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    networks:
+      - onshore
+
+  # ===========================================================================
+  # KAFKA (KRaft Mode - No Zookeeper)
+  # ===========================================================================
+  kafka:
+    image: apache/kafka:latest
+    container_name: onshore-kafka
+    mem_limit: 1g
+    mem_reservation: 512m
+    cpus: 1.0
+    # NO PORTS EXPOSED - Internal only
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@onshore-kafka:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://onshore-kafka:9092 # Internal service name
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_HEAP_OPTS: "-Xms256m -Xmx1g"
+    networks:
+      - onshore
+
+  # ===========================================================================
+  # CONFIG SERVER
+  # ===========================================================================
+  config-server:
+    image: "onshore/onshore-config-server:1.0.0"
+    container_name: onshore-config-server
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # NO PORTS EXPOSED - Internal only
+    environment:
+      SPRING_CLOUD_CONFIG_SERVER_GIT_URI: "https://github.com/phrouv/onshore-config"
+      EUREKA_CLIENT_ENABLED: "false"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8888/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - onshore
+
+  # ===========================================================================
+  # SERVICE REGISTRY (Eureka)
+  # ===========================================================================
+  service-registry:
+    image: "onshore/onshore-service-registry:1.0.0"
+    container_name: onshore-service-registry
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # NO PORTS EXPOSED - Internal only
+    depends_on:
+      config-server:
+        condition: service_healthy
+    environment:
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+    restart: unless-stopped
+    networks:
+      - onshore
+
+  # ===========================================================================
+  # API GATEWAY - ONLY EXTERNALLY EXPOSED SERVICE
+  # ===========================================================================
+  api-gateway:
+    image: "onshore/onshore-api-gateway:1.0.0"
+    container_name: onshore-api-gateway
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    ports:
+      - "5000:5000" # ONLY PORT EXPOSED TO THE WORLD
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "api-gateway"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    restart: unless-stopped
+    networks:
+      - onshore
+
+  # ===========================================================================
+  # BUSINESS SERVICES - ALL INTERNAL (NO PORTS EXPOSED)
+  # ===========================================================================
+  
+  # ========== USER SERVICE ==========
+  user-service:
+    image: "onshore/onshore-user:1.0.0"
+    container_name: onshore-user-service
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # NO PORTS EXPOSED - Internal only
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      userdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "user-service"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://userdb:5432/onshore_user_db"
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    restart: unless-stopped
+    networks:
+      - onshore
+  
+  # ========== PAYMENT SERVICE ==========
+  payment-service:
+    image: "onshore/onshore-payment:1.0.0"
+    container_name: onshore-payment-service
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # NO PORTS EXPOSED - Internal only
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      paymentdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "payment-service"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://paymentdb:5432/onshore_payment_db"
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    restart: unless-stopped
+    networks:
+      - onshore
+  
+  # ========== PARTNER SERVICE ==========
+  partner-service:
+    image: "onshore/onshore-partner:1.0.0"
+    container_name: onshore-partner-service
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # NO PORTS EXPOSED - Internal only
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      partnerdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "partner-service"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://partnerdb:5432/onshore_partner_db"
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    restart: unless-stopped
+    networks:
+      - onshore
+
+  # ========== BOOKING SERVICE ==========
+  booking-service:
+    image: "onshore/onshore-booking:1.0.0"
+    container_name: onshore-booking-service
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # NO PORTS EXPOSED - Internal only
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      bookingdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "booking-service"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://bookingdb:5432/onshore_booking_db"
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    restart: unless-stopped
+    networks:
+      - onshore
+
+  # ========== PLANNING SERVICE ==========
+  planning-service:
+    image: "onshore/onshore-planning:1.0.0"
+    container_name: onshore-planning-service
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # NO PORTS EXPOSED - Internal only
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      planningdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "planning-service"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://planningdb:5432/onshore_planning_db"
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    restart: unless-stopped
+    networks:
+      - onshore
+  
+  # ========== CREDIT SERVICE ==========
+  credit-service:
+    image: "onshore/onshore-credit:1.0.0"
+    container_name: onshore-credit-service
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # NO PORTS EXPOSED - Internal only
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      creditdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "credit-service"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://creditdb:5432/onshore_credit_db"
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    restart: unless-stopped
+    networks:
+      - onshore
+  
+  # ========== PAYOUT SERVICE ==========
+  payout-service:
+    image: "onshore/onshore-payout:1.0.0"
+    container_name: onshore-payout-service
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # NO PORTS EXPOSED - Internal only
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      payoutdb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "payout-service"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://payoutdb:5432/onshore_payout_db"
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    restart: unless-stopped
+    networks:
+      - onshore
+
+  # ========== ADMIN SERVICE ==========
+  admin-service:
+    image: "onshore/onshore-admin:1.0.0"
+    container_name: onshore-admin-service
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    # NO PORTS EXPOSED - Internal only
+    depends_on:
+      config-server:
+        condition: service_healthy
+      service-registry:
+        condition: service_healthy
+      admindb:
+        condition: service_healthy
+    environment:
+      SPRING_APPLICATION_NAME: "admin-service"
+      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
+      SPRING_DATASOURCE_URL: "jdbc:postgresql://admindb:5432/onshore_admin_db"
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
+    restart: unless-stopped
+    networks:
+      - onshore
+
+networks:
+  onshore:
+    driver: bridge

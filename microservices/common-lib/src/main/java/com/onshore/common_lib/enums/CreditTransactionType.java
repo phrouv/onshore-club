@@ -1,0 +1,11 @@
+package com.onshore.common_lib.enums;
+
+public enum CreditTransactionType {
+  MONTHLY_SUBSCRIPTION,
+  CREDIT_PURCHASE,
+  BOOKING,
+  CANCELLATION_REFUND,
+  ADMIN_ADJUSTMENT,
+  PROMOTIONAL_CREDIT,
+  CREDIT_EXPIRATION
+}

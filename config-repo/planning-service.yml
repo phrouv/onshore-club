@@ -1,0 +1,8 @@
+server:
+  port: 5005
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:3306/onshore_planning_db
+    username: postgres
+    password: root

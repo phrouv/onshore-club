@@ -1,0 +1,554 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-plans-table
+      author: onshore
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                tableName: plans
+      changes:
+        - createTable:
+            tableName: plans
+            columns:
+              - column:
+                  name: id
+                  type: VARCHAR(64)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_plans
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: monthly_price
+                  type: NUMERIC(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: credits_per_month
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: positioning
+                  type: VARCHAR(255)
+                  defaultValue: ''
+                  constraints:
+                    nullable: false
+              - column:
+                  name: popular
+                  type: BOOLEAN
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sort_order
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+
+  - changeSet:
+      id: 001-create-credit_settings-table
+      author: onshore
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                tableName: credit_settings
+      changes:
+        - createTable:
+            tableName: credit_settings
+            columns:
+              - column:
+                  name: id
+                  type: VARCHAR(64)
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_credit_settings
+                    nullable: false
+              - column:
+                  name: credits_low
+                  type: INTEGER
+                  defaultValueNumeric: 4
+                  constraints:
+                    nullable: false
+              - column:
+                  name: credits_normal
+                  type: INTEGER
+                  defaultValueNumeric: 5
+                  constraints:
+                    nullable: false
+              - column:
+                  name: credits_high
+                  type: INTEGER
+                  defaultValueNumeric: 7
+                  constraints:
+                    nullable: false
+              - column:
+                  name: default_payout
+                  type: NUMERIC(10,2)
+                  defaultValueNumeric: 5.00
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+
+  - changeSet:
+      id: 001-create-subscriptions-table
+      author: onshore
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                tableName: subscriptions
+      changes:
+        - createTable:
+            tableName: subscriptions
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_subscriptions
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: plan_id
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: plan_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: monthly_price
+                  type: NUMERIC(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: credits_per_month
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: ACTIVE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: end_date
+                  type: DATE
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 001-create-credit_transactions-table
+      author: onshore
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                tableName: credit_transactions
+      changes:
+        - createTable:
+            tableName: credit_transactions
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_credit_transactions
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: amount
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: price_paid
+                  type: NUMERIC(10,2)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 001-create-credit_accounts-table
+      author: onshore
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                tableName: credit_accounts
+      changes:
+        - createTable:
+            tableName: credit_accounts
+            columns:
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_credit_accounts
+                    nullable: false
+              - column:
+                  name: balance
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+
+  - changeSet:
+      id: 002-seed-plans
+      author: onshore
+      changes:
+            - insert:
+                tableName: plans
+                columns:
+                  - column:
+                      name: id
+                      value: "essential"
+                  - column:
+                      name: name
+                      value: "Essential"
+                  - column:
+                      name: monthly_price
+                      valueNumeric: 39
+                  - column:
+                      name: credits_per_month
+                      valueNumeric: 15
+                  - column:
+                      name: positioning
+                      value: "Découvrir"
+                  - column:
+                      name: popular
+                      valueBoolean: false
+                  - column:
+                      name: sort_order
+                      valueNumeric: 1
+
+            - insert:
+                tableName: plans
+                columns:
+                  - column:
+                      name: id
+                      value: "move"
+                  - column:
+                      name: name
+                      value: "Move"
+                  - column:
+                      name: monthly_price
+                      valueNumeric: 69
+                  - column:
+                      name: credits_per_month
+                      valueNumeric: 30
+                  - column:
+                      name: positioning
+                      value: "Pratiquer plus"
+                  - column:
+                      name: popular
+                      valueBoolean: false
+                  - column:
+                      name: sort_order
+                      valueNumeric: 2
+
+            - insert:
+                tableName: plans
+                columns:
+                  - column:
+                      name: id
+                      value: "active"
+                  - column:
+                      name: name
+                      value: "Active"
+                  - column:
+                      name: monthly_price
+                      valueNumeric: 89
+                  - column:
+                      name: credits_per_month
+                      valueNumeric: 45
+                  - column:
+                      name: positioning
+                      value: "Sportif régulier"
+                  - column:
+                      name: popular
+                      valueBoolean: true
+                  - column:
+                      name: sort_order
+                      valueNumeric: 3
+
+            - insert:
+                tableName: plans
+                columns:
+                  - column:
+                      name: id
+                      value: "plus"
+                  - column:
+                      name: name
+                      value: "Plus"
+                  - column:
+                      name: monthly_price
+                      valueNumeric: 109
+                  - column:
+                      name: credits_per_month
+                      valueNumeric: 60
+                  - column:
+                      name: positioning
+                      value: "Sportif assidu"
+                  - column:
+                      name: popular
+                      valueBoolean: false
+                  - column:
+                      name: sort_order
+                      valueNumeric: 4
+
+            - insert:
+                tableName: plans
+                columns:
+                  - column:
+                      name: id
+                      value: "premium"
+                  - column:
+                      name: name
+                      value: "Premium"
+                  - column:
+                      name: monthly_price
+                      valueNumeric: 149
+                  - column:
+                      name: credits_per_month
+                      valueNumeric: 80
+                  - column:
+                      name: positioning
+                      value: "Très gros utilisateur"
+                  - column:
+                      name: popular
+                      valueBoolean: false
+                  - column:
+                      name: sort_order
+                      valueNumeric: 5
+
+  - changeSet:
+      id: 003-seed-credit-settings
+      author: onshore
+      changes:
+            - insert:
+                tableName: credit_settings
+                columns:
+                  - column:
+                      name: id
+                      value: "Yoga"
+                  - column:
+                      name: credits_low
+                      valueNumeric: 5
+                  - column:
+                      name: credits_normal
+                      valueNumeric: 6
+                  - column:
+                      name: credits_high
+                      valueNumeric: 8
+                  - column:
+                      name: default_payout
+                      valueNumeric: 5
+
+            - insert:
+                tableName: credit_settings
+                columns:
+                  - column:
+                      name: id
+                      value: "Barre"
+                  - column:
+                      name: credits_low
+                      valueNumeric: 5
+                  - column:
+                      name: credits_normal
+                      valueNumeric: 6
+                  - column:
+                      name: credits_high
+                      valueNumeric: 8
+                  - column:
+                      name: default_payout
+                      valueNumeric: 5
+
+            - insert:
+                tableName: credit_settings
+                columns:
+                  - column:
+                      name: id
+                      value: "Pilates"
+                  - column:
+                      name: credits_low
+                      valueNumeric: 5
+                  - column:
+                      name: credits_normal
+                      valueNumeric: 7
+                  - column:
+                      name: credits_high
+                      valueNumeric: 9
+                  - column:
+                      name: default_payout
+                      valueNumeric: 5.5
+
+            - insert:
+                tableName: credit_settings
+                columns:
+                  - column:
+                      name: id
+                      value: "Fitness"
+                  - column:
+                      name: credits_low
+                      valueNumeric: 3
+                  - column:
+                      name: credits_normal
+                      valueNumeric: 4
+                  - column:
+                      name: credits_high
+                      valueNumeric: 5
+                  - column:
+                      name: default_payout
+                      valueNumeric: 3.5
+
+            - insert:
+                tableName: credit_settings
+                columns:
+                  - column:
+                      name: id
+                      value: "CrossFit"
+                  - column:
+                      name: credits_low
+                      valueNumeric: 6
+                  - column:
+                      name: credits_normal
+                      valueNumeric: 8
+                  - column:
+                      name: credits_high
+                      valueNumeric: 10
+                  - column:
+                      name: default_payout
+                      valueNumeric: 6.5
+
+            - insert:
+                tableName: credit_settings
+                columns:
+                  - column:
+                      name: id
+                      value: "Boxe"
+                  - column:
+                      name: credits_low
+                      valueNumeric: 6
+                  - column:
+                      name: credits_normal
+                      valueNumeric: 8
+                  - column:
+                      name: credits_high
+                      valueNumeric: 10
+                  - column:
+                      name: default_payout
+                      valueNumeric: 6.5
+
+            - insert:
+                tableName: credit_settings
+                columns:
+                  - column:
+                      name: id
+                      value: "Escalade"
+                  - column:
+                      name: credits_low
+                      valueNumeric: 7
+                  - column:
+                      name: credits_normal
+                      valueNumeric: 9
+                  - column:
+                      name: credits_high
+                      valueNumeric: 11
+                  - column:
+                      name: default_payout
+                      valueNumeric: 7
+
+            - insert:
+                tableName: credit_settings
+                columns:
+                  - column:
+                      name: id
+                      value: "Reformer"
+                  - column:
+                      name: credits_low
+                      valueNumeric: 10
+                  - column:
+                      name: credits_normal
+                      valueNumeric: 12
+                  - column:
+                      name: credits_high
+                      valueNumeric: 14
+                  - column:
+                      name: default_payout
+                      valueNumeric: 9
+
+            - insert:
+                tableName: credit_settings
+                columns:
+                  - column:
+                      name: id
+                      value: "Autre"
+                  - column:
+                      name: credits_low
+                      valueNumeric: 4
+                  - column:
+                      name: credits_normal
+                      valueNumeric: 5
+                  - column:
+                      name: credits_high
+                      valueNumeric: 7
+                  - column:
+                      name: default_payout
+                      valueNumeric: 5

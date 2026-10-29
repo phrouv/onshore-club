@@ -1,0 +1,29 @@
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+
+spring:
+  application:
+    name: credit-service
+  config:
+    import: optional:configserver:http://localhost:8888
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: "Manages member credits: balance ledger, subscription plans, credit pricing grid."
+    version: 1.0.0
+    environment: development
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always

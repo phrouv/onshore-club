@@ -1,0 +1,8 @@
+server:
+  port: 5006
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:3307/onshore_credit_db
+    username: postgres
+    password: root

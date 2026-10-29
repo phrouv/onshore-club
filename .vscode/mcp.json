@@ -1,0 +1,72 @@
+{
+  "servers": {
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ],
+      "type": "stdio"
+    },
+    "context7": {
+      "type": "http",
+      "url": "https://mcp.context7.com/mcp"
+    },
+    "ado": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@azure-devops/mcp@next",
+        "${input:ado_org}",
+        "--authentication",
+        "azcli"
+      ]
+    },
+    "figma": {
+      "url": "https://mcp.figma.com/mcp",
+      "type": "http"
+    },
+    "Figma Desktop": {
+      "type": "http",
+      "url": "http://127.0.0.1:3845/mcp"
+    },
+    "sonarqube": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "sonarqube-mcp-server@latest"
+      ],
+      "env": {
+        "SONARQUBE_URL": "${input:sonarqube_url}",
+        "SONARQUBE_TOKEN": "${input:sonarqube_token}",
+      }
+    }
+  },
+  "inputs": [
+    {
+      "id": "ado_org",
+      "type": "promptString",
+      "description": "Azure DevOps organization name  (e.g. 'contoso')"
+    },
+    {
+      "id": "figma_personal_access_token",
+      "type": "promptString",
+      "description": "Figma Personal Access Token"
+    },
+    {
+      "id": "sonarqube_url",
+      "type": "promptString",
+      "description": "SonarQube URL (e.g. 'https://sonarcloud.io' or 'https://codequality.lpl-cloud.com')"
+    },
+    {
+      "id": "sonarqube_token",
+      "type": "promptString",
+      "description": "SonarQube authentication token"
+    },
+    {
+      "id": "sonarqube_organization",
+      "type": "promptString",
+      "description": "SonarQube organization (required for SonarCloud, optional for self-hosted)"
+    }
+  ]
+}

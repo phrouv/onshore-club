@@ -1,0 +1,59 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-payments-table
+      author: onshore
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                tableName: payments
+      changes:
+        - createTable:
+            tableName: payments
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_payments
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+              - column:
+                  name: booking_id
+                  type: UUID
+              - column:
+                  name: amount
+                  type: DOUBLE PRECISION
+              - column:
+                  name: provider
+                  type: VARCHAR(50)
+              - column:
+                  name: provider_payment_id
+                  type: VARCHAR(255)
+              - column:
+                  name: transaction_id
+                  type: VARCHAR(255)
+              - column:
+                  name: method
+                  type: VARCHAR(100)
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+              - column:
+                  name: failure_reason
+                  type: VARCHAR(500)
+              - column:
+                  name: paid_at
+                  type: TIMESTAMP
+              - column:
+                  name: refund_id
+                  type: VARCHAR(255)
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP

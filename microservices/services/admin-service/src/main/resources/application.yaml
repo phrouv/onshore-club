@@ -1,0 +1,36 @@
+eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+
+spring:
+  application:
+    name: admin-service
+  config:
+    import: optional:configserver:http://localhost:8888
+
+com:
+  onshore:
+    storage:
+      proxy-endpoint: http://127.0.0.1:8081
+      bucket-name: onshorebucket
+      local-file-base-directory: tmp-store
+
+info:
+  app:
+    name: ${spring.application.name}
+    description: "Admin rules (usage limits, check-in and cancellation settings) and global dashboard."
+    version: 1.0.0
+    environment: development
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always

@@ -1,0 +1,55 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "editor.comments.insertSpace": true,
+  "editor.insertSpaces": true,
+  "editor.rulers": [
+    100
+  ],
+  "files.insertFinalNewline": true,
+  "files.eol": "\n",
+  "chat.instructionsFilesLocations": {
+    "ai/rules/**": true
+  },
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "chat.promptFilesLocations": {
+    "ai/prompts": true
+  },
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": "ai/prompts/commit.prompt.md"
+    }
+  ],
+  "java.compile.nullAnalysis.mode": "automatic",
+  "chat.mcp.serverSampling": {
+    "admin-tool/.vscode/mcp.json: sonarqube": {
+      "allowedModels": [
+        "copilot/claude-sonnet-5.5"
+      ]
+    },
+    "admin-tool/.vscode/mcp.json: ado": {
+      "allowedModels": [
+        "copilot/claude-sonnet-5.5"
+      ]
+    }
+  },
+  "github.copilot.chat.summarizeAgentConversationHistory.enabled": false,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.debug.settings.onBuildFailureProceed": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  }
+}

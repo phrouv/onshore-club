@@ -1,0 +1,137 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001-create-bookings-table
+      author: onshore
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                tableName: bookings
+      changes:
+        - createTable:
+            tableName: bookings
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_bookings
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: class_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: activity_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: partner_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: credits_spent
+                  type: INTEGER
+                  defaultValueNumeric: 0
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: CONFIRMED
+                  constraints:
+                    nullable: false
+              - column:
+                  name: class_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: class_start_time
+                  type: TIME
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 001-create-checkins-table
+      author: onshore
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                tableName: checkins
+      changes:
+        - createTable:
+            tableName: checkins
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_checkins
+                    nullable: false
+              - column:
+                  name: booking_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: true
+                    uniqueConstraintName: uk_checkins_booking_id
+              - column:
+                  name: checked_in_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: validated_by
+                  type: VARCHAR(255)
+              - column:
+                  name: method
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: 002-bookings-indexes
+      author: onshore
+      changes:
+        - createIndex:
+            tableName: bookings
+            indexName: idx_bookings_class
+            columns:
+              - column:
+                  name: class_id
+        - createIndex:
+            tableName: bookings
+            indexName: idx_bookings_user
+            columns:
+              - column:
+                  name: user_id
+        - createIndex:
+            tableName: bookings
+            indexName: idx_bookings_partner
+            columns:
+              - column:
+                  name: partner_id
