@@ -11,4 +11,5 @@ public record UsageRuleResponse(
     UUID activityId,
     Integer maxUses,
     Boolean active,
-    Instant createdAt) {}
+    Instant createdAt,
+    Instant lastModifiedDate) {}

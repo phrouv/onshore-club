@@ -19,7 +19,6 @@ import com.onshore.services.repository.AppSettingsRepository;
 import com.onshore.services.repository.UsageRuleRepository;
 import com.onshore.services.service.AdminService;
 import java.math.BigDecimal;
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -91,7 +90,6 @@ public class AdminServiceImpl implements AdminService {
     s.setCheckinBeforeMinutes(request.checkinBeforeMinutes());
     s.setCheckinAfterMinutes(request.checkinAfterMinutes());
     s.setCancellationHours(request.cancellationHours());
-    s.setUpdatedAt(Instant.now());
     settingsRepository.save(s);
     return settings();
   }
@@ -122,7 +120,7 @@ public class AdminServiceImpl implements AdminService {
   private AppSettings current() {
     return settingsRepository
         .findById(GLOBAL)
-        .orElseGet(() -> settingsRepository.save(AppSettings.builder().id(GLOBAL).build()));
+        .orElseGet(() -> settingsRepository.save(new AppSettings()));
   }
 
   private static void validate(UsageRuleRequest r) {

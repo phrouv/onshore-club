@@ -1,8 +1,7 @@
 package com.onshore.services.model;
 
+import com.onshore.common_lib.model.AbstractFullAuditingEntity;
 import jakarta.persistence.*;
-import java.io.Serializable;
-import java.time.Instant;
 import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
@@ -14,11 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @AllArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "app_settings")
-public class AppSettings implements Serializable {
-
-  @Id
-  @Column(name = "id", nullable = false, updatable = false)
-  private String id;
+public class AppSettings extends AbstractFullAuditingEntity {
 
   @Column(nullable = false)
   @Builder.Default
@@ -31,6 +26,4 @@ public class AppSettings implements Serializable {
   @Column(nullable = false)
   @Builder.Default
   private Integer cancellationHours = 12;
-
-  private Instant updatedAt;
 }

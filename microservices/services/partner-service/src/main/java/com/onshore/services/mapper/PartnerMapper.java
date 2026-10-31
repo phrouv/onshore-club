@@ -14,9 +14,6 @@ public class PartnerMapper {
     entity.setAddress(request.address());
     entity.setCity(request.city());
     entity.setDescription(request.description());
-    entity.setCategory(request.category());
-    entity.setLatitude(request.latitude());
-    entity.setLongitude(request.longitude());
     entity.setPhone(request.phone());
     entity.setProfessionalEmail(request.professionalEmail());
     entity.setWebsite(request.website());
@@ -25,7 +22,6 @@ public class PartnerMapper {
     entity.setDesiredSeats(request.desiredSeats());
     entity.setManagerFirstName(request.managerFirstName());
     entity.setManagerLastName(request.managerLastName());
-    entity.setManagerRole(request.managerRole());
     return entity;
   }
 
@@ -34,9 +30,6 @@ public class PartnerMapper {
     if (request.address() != null) entity.setAddress(request.address());
     if (request.city() != null) entity.setCity(request.city());
     if (request.description() != null) entity.setDescription(request.description());
-    if (request.category() != null) entity.setCategory(request.category());
-    if (request.latitude() != null) entity.setLatitude(request.latitude());
-    if (request.longitude() != null) entity.setLongitude(request.longitude());
     if (request.phone() != null) entity.setPhone(request.phone());
     if (request.professionalEmail() != null)
       entity.setProfessionalEmail(request.professionalEmail());
@@ -46,7 +39,6 @@ public class PartnerMapper {
     if (request.desiredSeats() != null) entity.setDesiredSeats(request.desiredSeats());
     if (request.managerFirstName() != null) entity.setManagerFirstName(request.managerFirstName());
     if (request.managerLastName() != null) entity.setManagerLastName(request.managerLastName());
-    if (request.managerRole() != null) entity.setManagerRole(request.managerRole());
   }
 
   public static PartnerResponse toResponse(Partner e) {
@@ -56,10 +48,7 @@ public class PartnerMapper {
         e.getAddress(),
         e.getCity(),
         e.getDescription(),
-        e.getCategory(),
         e.getStatus(),
-        e.getLatitude(),
-        e.getLongitude(),
         e.getPhone(),
         e.getProfessionalEmail(),
         e.getWebsite(),
@@ -68,8 +57,8 @@ public class PartnerMapper {
         e.getDesiredSeats(),
         e.getManagerFirstName(),
         e.getManagerLastName(),
-        e.getManagerRole(),
         e.getOwnerUserId(),
-        e.getCreatedAt());
+        e.getCreatedDate(),
+        e.getLastModifiedDate());
   }
 }

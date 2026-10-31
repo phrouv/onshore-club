@@ -7,13 +7,13 @@ description: "This prompt is designed to generate a user stories for a given epi
 
 You are given:
 
-- A specific **Epic Markdown file**: `specifications/epics/[epic-title]/[epic-title].md`
-- Access to all Epic files in: `specifications/epics/`
+- A specific **Epic Markdown file**: `../../documentation/epics`
+- Access to all Epic files in: `../../documentation/epics`
 
 Your task:
 
 1. Parse the **target Epic** in full.
-2. Analyze **all other Epics** in `specifications/epics/` for:
+2. Analyze **all other Epics** in `../../documentation/epics` for:
    - **Cross-epic dependencies**
    - Shared **design/API links**
    - Consistency in **technical and business context**

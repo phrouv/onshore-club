@@ -30,11 +30,11 @@ The generated content must:
 - Include both happy path and error scenario flows
 
 ## Template to Follow
-Use the diagrams template located at `specifications/templates/paragraphs/06-diagrams-template.md`
+Use the diagrams template located at `../../documentation`
 
 ## Output Location
 Save the generated diagrams section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/06-diagrams.md`
+`../../documentation`
 
 ## Mermaid Syntax Guidelines
 - Component diagrams: Use `graph TB` with subgraphs for logical grouping
@@ -51,7 +51,7 @@ Input:
 - STATE_DIAGRAM: Payment state transitions (initiated → processing → completed/failed)
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/06-diagrams.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Keep diagrams focused and not overly complex

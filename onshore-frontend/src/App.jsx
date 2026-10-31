@@ -27,10 +27,15 @@ import AdminBookings from "./pages/admin/AdminBookings";
 import AdminCredits from "./pages/admin/AdminCredits";
 import AdminPayouts from "./pages/admin/AdminPayouts";
 import AdminRules from "./pages/admin/AdminRules";
+import AdminCategories from "./pages/admin/AdminCategories";
 
 function Home() {
   const user = useSelector((s) => s.auth.user);
-  return user ? <Navigate to={ROLE_HOME[user.role] || "/login"} replace /> : <Landing />;
+  return user ? (
+    <Navigate to={ROLE_HOME[user.role] || "/login"} replace />
+  ) : (
+    <Landing />
+  );
 }
 
 export default function App() {
@@ -45,33 +50,34 @@ export default function App() {
         <Route element={<ProtectedRoute role="ROLE_MEMBER" />}>
           <Route path="/member" element={<MemberShell />}>
             <Route index element={<MemberHome />} />
-            <Route path="explorer" element={<Explore />} />
+            <Route path="explore" element={<Explore />} />
             <Route path="planning" element={<Planning />} />
             <Route path="credits" element={<Credits />} />
-            <Route path="profil" element={<MemberProfile />} />
+            <Route path="profile" element={<MemberProfile />} />
           </Route>
         </Route>
 
         <Route element={<ProtectedRoute role="ROLE_PARTNER" />}>
           <Route path="/partner" element={<PartnerShell />}>
             <Route index element={<PartnerDashboard />} />
-            <Route path="activites" element={<PartnerActivities />} />
-            <Route path="creneaux" element={<PartnerClasses />} />
-            <Route path="reservations" element={<PartnerBookings />} />
-            <Route path="gains" element={<PartnerEarnings />} />
-            <Route path="profil" element={<PartnerProfile />} />
+            <Route path="activities" element={<PartnerActivities />} />
+            <Route path="classes" element={<PartnerClasses />} />
+            <Route path="bookings" element={<PartnerBookings />} />
+            <Route path="earnings" element={<PartnerEarnings />} />
+            <Route path="profile" element={<PartnerProfile />} />
           </Route>
         </Route>
 
         <Route element={<ProtectedRoute role="ROLE_SYSTEM_ADMIN" />}>
           <Route path="/admin" element={<AdminShell />}>
             <Route index element={<AdminDashboard />} />
-            <Route path="partenaires" element={<AdminPartners />} />
-            <Route path="membres" element={<AdminMembers />} />
-            <Route path="reservations" element={<AdminBookings />} />
+            <Route path="partners" element={<AdminPartners />} />
+            <Route path="members" element={<AdminMembers />} />
+            <Route path="bookings" element={<AdminBookings />} />
             <Route path="credits" element={<AdminCredits />} />
-            <Route path="paiements" element={<AdminPayouts />} />
-            <Route path="regles" element={<AdminRules />} />
+            <Route path="payouts" element={<AdminPayouts />} />
+            <Route path="rules" element={<AdminRules />} />
+            <Route path="categories" element={<AdminCategories />} />
           </Route>
         </Route>
 

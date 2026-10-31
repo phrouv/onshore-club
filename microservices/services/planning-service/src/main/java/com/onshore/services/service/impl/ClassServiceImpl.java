@@ -74,7 +74,7 @@ public class ClassServiceImpl implements ClassService {
   @Override
   @Transactional(readOnly = true)
   public ClassResponse get(UUID id, String roles) {
-    return toResponses(List.of(find(id)), roles).get(0);
+    return toResponses(List.of(find(id)), roles).getFirst();
   }
 
   @Override
@@ -124,7 +124,7 @@ public class ClassServiceImpl implements ClassService {
       session.setCreditsRequired(
           creditsFor(partnerClient.activity(session.getActivityId()), request.demandLevel()));
     }
-    return toResponses(List.of(classRepository.save(session)), roles).get(0);
+    return toResponses(List.of(classRepository.save(session)), roles).getFirst();
   }
 
   @Override
@@ -138,7 +138,7 @@ public class ClassServiceImpl implements ClassService {
           "This class has " + booked + " booking(s): it cannot be closed");
     }
     session.setStatus(ClassStatus.CLOSED);
-    return toResponses(List.of(classRepository.save(session)), roles).get(0);
+    return toResponses(List.of(classRepository.save(session)), roles).getFirst();
   }
 
   @Override
@@ -146,7 +146,7 @@ public class ClassServiceImpl implements ClassService {
     ClassSession session = find(id);
     authorize(session.getPartnerId(), userId, roles);
     session.setStatus(ClassStatus.OPEN);
-    return toResponses(List.of(classRepository.save(session)), roles).get(0);
+    return toResponses(List.of(classRepository.save(session)), roles).getFirst();
   }
 
   @Override

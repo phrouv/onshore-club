@@ -15,7 +15,7 @@ public interface PartnerService {
 
   PartnerResponse mine(UUID ownerUserId);
 
-  List<PartnerResponse> list(PartnerStatus status, String city, String category);
+  List<PartnerResponse> list(PartnerStatus status, String city);
 
   PartnerResponse update(UUID id, PartnerRequest request, UUID userId, boolean admin);
 

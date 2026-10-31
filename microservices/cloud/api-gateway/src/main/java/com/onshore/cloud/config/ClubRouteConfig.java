@@ -72,4 +72,13 @@ public class ClubRouteConfig {
         .before(request -> auth.requireRole(request, "ROLE_SYSTEM_ADMIN"))
         .build();
   }
+
+  @Bean
+  public RouterFunction<ServerResponse> categoryServiceRoutes() {
+    return GatewayRouterFunctions.route("category-service-routes")
+        .route(RequestPredicates.path("/api/categories/**"), HandlerFunctions.http())
+        .filter(LoadBalancerFilterFunctions.lb("admin-service"))
+        .before(auth::jwtAuthFilter)
+        .build();
+  }
 }

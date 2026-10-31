@@ -65,6 +65,22 @@ export const saveSettings = createAsyncThunk(
   "admin/saveSettings",
   guarded((body) => adminService.saveSettings(body)),
 );
+export const fetchCategories = createAsyncThunk(
+  "admin/categories",
+  guarded(() => adminService.categories()),
+);
+export const saveCategory = createAsyncThunk(
+  "admin/saveCategory",
+  guarded(({ code, body }) =>
+    code
+      ? adminService.updateCategory(code, body)
+      : adminService.createCategory(body),
+  ),
+);
+export const setCategoryStatus = createAsyncThunk(
+  "admin/categoryStatus",
+  guarded(({ code, active }) => adminService.setCategoryStatus(code, active)),
+);
 export const fetchCreditSettings = createAsyncThunk(
   "admin/creditSettings",
   guarded(() => creditService.settings()),
@@ -112,6 +128,7 @@ const adminSlice = createSlice({
     activities: [],
     rules: [],
     settings: null,
+    categories: [],
     creditSettings: [],
     plans: [],
     payouts: [],
@@ -156,6 +173,15 @@ const adminSlice = createSlice({
     });
     asyncCases(builder, saveSettings, (state, { payload }) => {
       state.settings = payload;
+    });
+    asyncCases(builder, fetchCategories, (state, { payload }) => {
+      state.categories = payload;
+    });
+    asyncCases(builder, saveCategory, (state, { payload }) => {
+      state.categories = upsert(state.categories, payload, "code");
+    });
+    asyncCases(builder, setCategoryStatus, (state, { payload }) => {
+      state.categories = upsert(state.categories, payload, "code");
     });
     asyncCases(builder, fetchCreditSettings, (state, { payload }) => {
       state.creditSettings = payload;

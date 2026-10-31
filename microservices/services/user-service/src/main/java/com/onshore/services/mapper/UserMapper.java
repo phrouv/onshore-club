@@ -22,7 +22,7 @@ public class UserMapper {
   }
 
   public static List<UserDTO> toDTOList(List<User> users) {
-    return users.stream().map(UserMapper::toDTO).collect(Collectors.toList());
+    return users.stream().map(UserMapper::toDTO).toList();
   }
 
   public static Set<UserDTO> toDTOSet(Set<User> users) {

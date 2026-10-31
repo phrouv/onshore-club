@@ -34,6 +34,7 @@ public class UsageRuleMapper {
         e.getActivityId(),
         e.getMaxUses(),
         e.getActive(),
-        e.getCreatedAt());
+        e.getCreatedDate(),
+        e.getLastModifiedDate());
   }
 }

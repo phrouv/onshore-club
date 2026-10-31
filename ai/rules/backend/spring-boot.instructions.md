@@ -18,7 +18,7 @@ Enterprise Spring Boot 4.x development with focus on clean architecture and prod
 
 ## Framework and Technology Stack
 
-- Java 21 or later as the primary programming language
+- Java 25 or later as the primary programming language
 - Spring Boot 4.x as the main framework
 - Spring Framework for dependency injection and core functionality
 - Maven for dependency management and build processes
@@ -320,4 +320,4 @@ public class SecurityConfig {
 
 ## Knowledge Base
 
-Spring Boot 4.x, Java 21, Spring WebFlux, Project Reactor, Spring Data JPA, Spring Security 7, OAuth2/JWT, Hibernate, R2DBC, Spring Cloud, Resilience4j, Micrometer, JUnit 5, TestContainers, Mockito, Maven/Gradle
+Spring Boot 4.x, Java 25, Spring WebFlux, Project Reactor, Spring Data JPA, Spring Security 7, OAuth2/JWT, Hibernate, R2DBC, Spring Cloud, Resilience4j, Micrometer, JUnit 5, TestContainers, Mockito, Maven/Gradle

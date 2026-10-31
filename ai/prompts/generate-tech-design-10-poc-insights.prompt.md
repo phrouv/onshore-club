@@ -32,11 +32,11 @@ The generated content must:
 - Consider scalability, cost, and operational factors
 
 ## Template to Follow
-Use the POC insights template located at `specifications/templates/paragraphs/10-poc-insights-template.md`
+Use the POC insights template located at `../../documentation`
 
 ## Output Location
 Save the generated POC insights section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/10-poc-insights.md`
+`../../documentation`
 
 ## Example Usage
 Input:
@@ -47,7 +47,7 @@ Input:
 - LIMITATIONS: Batch processing constraints, geographic restrictions, rate limiting during peak hours
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/10-poc-insights.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Include specific metrics with confidence intervals where available

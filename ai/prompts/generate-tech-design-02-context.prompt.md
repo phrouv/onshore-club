@@ -8,11 +8,11 @@ Generate the context section using ONLY business problems, use cases, and object
 
 ## Repository Sources to Analyze
 Before generating content, you MUST scan:
-- `specifications/epics/` - For business requirements and user stories
-- `specifications/backlog/` - For backlog items and acceptance criteria
-- `specifications/context/` - For business context documentation
+- `../../documentation` - For business requirements and user stories
+- `../../documentation` - For backlog items and acceptance criteria
+- `../../documentation` - For business context documentation
 - `microservices/README.md` - For project purpose, features and goals
-- `specifications/personae/` - For user personas and use cases
+- `../../documentation` - For user personas and use cases
 
 ## Input Parameters
 - `{{DATE}}` - Date for the document (format: YYYY-MM-DD)
@@ -38,11 +38,11 @@ The generated content must:
 - Be professionally written and technically accurate
 
 ## Template to Follow
-Use the context template located at `specifications/templates/paragraphs/02-context-template.md`
+Use the context template located at `../../documentation`
 
 ## Output Location
 Save the generated context section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/02-context.md`
+`../../documentation`
 
 ## Example Usage
 Input:
@@ -53,7 +53,7 @@ Input:
 - OBJECTIVE: Implement seamless payment processing with 99.9% uptime and PCI DSS compliance
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/02-context.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Include business drivers and technical motivations

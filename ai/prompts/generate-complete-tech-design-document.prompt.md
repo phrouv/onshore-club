@@ -16,11 +16,11 @@ Generate a complete technical design document by coordinating the creation of al
 Before generating any content, you MUST scan and analyze the following repository sources:
 
 ### Primary Documentation Sources
-- `specifications/` - Complete specifications folder
-- `specifications/epics/` - Epic specifications and requirements
-- `specifications/backlog/` - Backlog items and user stories
-- `specifications/api-specs/` - API specifications
-- `specifications/database/` - Database models and schemas
+- `../../documentation` - Complete specifications folder
+- `../../documentation` - Epic specifications and requirements
+- `../../documentation` - Backlog items and user stories
+- `../../documentation` - API specifications
+- `../../documentation` - Database models and schemas
 
 ### Technical Implementation Sources
 - `microservices/services/` - Spring Boot microservices source code
@@ -109,7 +109,7 @@ Input:
 - DOCUMENT_CONTEXT: Integration with external PSP for enhanced payment processing capabilities
 
 This would create a complete tech design document set in:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/`
+`../../documentation`
 
 ## Quality Assurance
 After generation:

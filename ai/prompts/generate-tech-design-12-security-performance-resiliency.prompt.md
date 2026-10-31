@@ -50,12 +50,12 @@ The generated content must:
 
 ## Template to Follow
 
-Use the security, performance, and resiliency template located at `specifications/templates/paragraphs/12-security-performance-resiliency-template.md`
+Use the security, performance, and resiliency template located at `../../documentation`
 
 ## Output Location
 
 Save the generated security, performance, and resiliency section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/12-security-performance-resiliency.md`
+`../../documentation`
 
 ## Example Usage
 
@@ -68,7 +68,7 @@ Input:
 - RESILIENCY_MECHANISMS: Circuit breaker pattern, retry logic, multi-region failover, disaster recovery procedures
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/12-security-performance-resiliency.md`
+`../../documentation`
 
 ## Quality Guidelines
 

@@ -11,7 +11,7 @@ Before generating content, you MUST scan:
 - `microservices/services/*/src/main/java/` - For actual Spring Boot controller endpoints
 - `microservices/cloud/api-gateway/` and `config-repo/api-gateway.yml` - For gateway routes exposed to the frontend
 - `onshore-frontend/src/services/` - For how the frontend calls the APIs
-- `specifications/api-specs/` - For existing API specifications
+- `../../documentation` - For existing API specifications
 - `microservices/services/*/src/main/resources/` - For OpenAPI specifications or configurations
 - `microservices/services/*/src/test/` - For API test examples showing request/response formats
 
@@ -41,11 +41,11 @@ The generated content must:
 - Be suitable for both internal developers and external API consumers
 
 ## Template to Follow
-Use the API documentation template located at `specifications/templates/paragraphs/08-api-documentation-template.md`
+Use the API documentation template located at `../../documentation`
 
 ## Output Location
 Save the generated API documentation section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/08-api-documentation.md`
+`../../documentation`
 
 ## Example Usage
 Input:
@@ -56,7 +56,7 @@ Input:
 - EXAMPLE_RESPONSE: Payment response with paymentId, status, timestamps, and metadata
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/08-api-documentation.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Use consistent HTTP status codes following REST conventions

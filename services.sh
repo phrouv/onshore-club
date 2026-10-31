@@ -2,8 +2,8 @@
 # services.sh - Build, start and stop the Onshore stack locally.
 #
 #   -l | --list    List services (name, folder, port, kind)
-#   -b | --build   Build services (mvn clean install / pnpm build)
-#   -up            Start infra (docker) + Spring Cloud services + frontend
+#   -b | --build   Build services (mvn clean install / pnpm build); compiles common-lib first
+#   -up            Compile common-lib, start infra (docker) + Spring Cloud services + frontend
 #   -s | --stop    Stop services by port and shut down docker infra
 
 set -euo pipefail
@@ -23,8 +23,8 @@ ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MS_DIR="microservices"
 COMPOSE_APP="$ROOT_DIR/docker-compose.yml"
 COMPOSE_DEV="$ROOT_DIR/docker-compose.dev.yml"
-# Postgres containers (docker-compose.yml) needed by local services
-DB_CONTAINERS=(userdb bookingdb paymentdb partnerdb planningdb creditdb payoutdb admindb pgadmin)
+# Infra containers (docker-compose.yml) needed by local services
+DB_CONTAINERS=(userdb bookingdb paymentdb partnerdb planningdb creditdb payoutdb admindb minio pgadmin)
 
 GREEN="\033[32m"
 YELLOW="\033[33m"
@@ -153,8 +153,8 @@ Usage: $(basename "$0") [options]
 
 Options:
   -l, --list         List services (name, folder, port, kind)
-  -b, --build        Build services and print summary table
-  -up, --up, -u      Start infra, backend services and frontend
+  -b, --build        Compile common-lib, then build services and print summary table
+  -up, --up, -u      Compile common-lib, then start infra, backend services and frontend
   -s, --stop         Stop services by port (+ docker infra when no --only)
   --prune            Prune all Docker volumes before starting (use with -up)
   --profile PROFILE  Spring Boot profile (default: none)
@@ -177,7 +177,17 @@ list_services() {
   done
 }
 
+# Every Spring service depends on common-lib; it must be installed before they build or run.
+build_common_lib() {
+  echo -e "${BOLD}[BUILD]${RESET} common-lib (prerequisite)"
+  (cd "$ROOT_DIR/$MS_DIR/common-lib" && mvn -q clean install -DskipTests) || {
+    echo -e "${RED}[BUILD][ERROR]${RESET} common-lib failed; aborting" >&2
+    return 1
+  }
+}
+
 build_services() {
+  build_common_lib
   local -a results=()
   local entry name folder port kind cmd start end rc log
   for entry in "${SERVICES[@]}"; do
@@ -237,10 +247,11 @@ ensure_docker_and_infra() {
   fi
   echo -e "${BOLD}Starting infra: redis + kafka (dev compose), postgres databases...${RESET}"
   docker compose -f "$COMPOSE_DEV" up -d
-  docker compose -f "$COMPOSE_APP" up -d "${DB_CONTAINERS[@]}"
+  docker compose -f "$COMPOSE_APP" up -d --wait "${DB_CONTAINERS[@]}"
 }
 
 up_services() {
+  build_common_lib
   if [[ $DO_NO_INFRA == false ]]; then
     ensure_docker_and_infra
   fi

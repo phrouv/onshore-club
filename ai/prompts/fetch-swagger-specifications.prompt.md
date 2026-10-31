@@ -150,7 +150,7 @@ Create a comprehensive report of the fetched specifications:
 4. Use these specs for client code generation if needed
 ```
 
-Save this report as: `specifications/api-specs/fetch-report-{YYYY-MM-DD-HHMMSS}.md`
+Save this report as: `../../documentation`
 
 ## Error Handling
 
@@ -167,7 +167,7 @@ Save this report as: `specifications/api-specs/fetch-report-{YYYY-MM-DD-HHMMSS}.
    - Ensure SpringDoc is properly configured
 
 3. **Permission denied**:
-   - Ensure write permissions to `specifications/api-specs/` directory
+   - Ensure write permissions to `../../documentation` directory
    - Create directories with proper permissions: `mkdir -p specifications/api-specs/<service>`
 
 4. **Network connectivity**:

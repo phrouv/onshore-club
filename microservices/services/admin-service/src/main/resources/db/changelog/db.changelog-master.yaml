@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: 001-create-usage_rules-table
+      id: 001-create-usage-rules-table
       author: onshore
       preConditions:
         - onFail: MARK_RAN
@@ -39,14 +39,17 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: created_at
-                  type: TIMESTAMP WITH TIME ZONE
+                  name: created_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
                   defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
 
   - changeSet:
-      id: 001-create-app_settings-table
+      id: 002-create-app-settings-table
       author: onshore
       preConditions:
         - onFail: MARK_RAN
@@ -59,7 +62,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: VARCHAR(64)
+                  type: UUID
                   constraints:
                     primaryKey: true
                     primaryKeyName: pk_app_settings
@@ -83,38 +86,17 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: updated_at
-                  type: TIMESTAMP WITH TIME ZONE
+                  name: created_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
 
   - changeSet:
-      id: 002-seed-app-settings
-      author: onshore
-      changes:
-        - insert:
-            tableName: app_settings
-            columns:
-              - column:
-                  name: id
-                  value: global
-  - changeSet:
-      id: 003-seed-default-usage-rule
-      author: onshore
-      changes:
-        - insert:
-            tableName: usage_rules
-            columns:
-              - column:
-                  name: id
-                  valueComputed: gen_random_uuid()
-              - column:
-                  name: scope
-                  value: SESSIONS_PER_DAY
-              - column:
-                  name: active
-                  valueBoolean: true
-
-  - changeSet:
-      id: 004-create-categories-table
+      id: 003-create-categories-table
       author: onshore
       preConditions:
         - onFail: MARK_RAN
@@ -133,12 +115,65 @@ databaseChangeLog:
                     primaryKeyName: pk_categories
                     nullable: false
               - column:
-                  name: name
-                  type: VARCHAR(255)
+                  name: code
+                  type: VARCHAR(10)
                   constraints:
                     nullable: false
                     unique: true
-                    uniqueConstraintName: uq_categories_name
+                    uniqueConstraintName: uk_category_code
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: active
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
               - column:
                   name: image
-                  type: VARCHAR(255)
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+
+  - changeSet:
+      id: 004-seed-app-settings
+      author: onshore
+      changes:
+        - insert:
+            tableName: app_settings
+            columns:
+              - column:
+                  name: id
+                  valueComputed: gen_random_uuid()
+
+  - changeSet:
+      id: 005-seed-default-usage-rule
+      author: onshore
+      changes:
+        - insert:
+            tableName: usage_rules
+            columns:
+              - column:
+                  name: id
+                  valueComputed: gen_random_uuid()
+              - column:
+                  name: scope
+                  value: SESSIONS_PER_DAY
+              - column:
+                  name: active
+                  valueBoolean: true

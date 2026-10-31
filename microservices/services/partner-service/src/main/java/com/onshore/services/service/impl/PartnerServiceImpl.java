@@ -55,11 +55,10 @@ public class PartnerServiceImpl implements PartnerService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<PartnerResponse> list(PartnerStatus status, String city, String category) {
+  public List<PartnerResponse> list(PartnerStatus status, String city) {
     return partnerRepository.findAll().stream()
         .filter(p -> status == null || p.getStatus() == status)
         .filter(p -> city == null || city.equalsIgnoreCase(p.getCity()))
-        .filter(p -> category == null || category.equalsIgnoreCase(p.getCategory()))
         .map(PartnerMapper::toResponse)
         .toList();
   }

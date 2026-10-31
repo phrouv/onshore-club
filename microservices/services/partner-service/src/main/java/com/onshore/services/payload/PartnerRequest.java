@@ -7,9 +7,6 @@ public record PartnerRequest(
     @NotBlank String address,
     @NotBlank String city,
     String description,
-    @NotBlank String category,
-    Double latitude,
-    Double longitude,
     String phone,
     String professionalEmail,
     String website,
@@ -17,5 +14,4 @@ public record PartnerRequest(
     String activityTypes,
     String desiredSeats,
     String managerFirstName,
-    String managerLastName,
-    String managerRole) {}
+    String managerLastName) {}

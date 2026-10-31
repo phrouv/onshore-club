@@ -18,25 +18,22 @@ import {
   fetchPayoutSummary,
   setPartnerStatus,
 } from "../../Redux/admin/adminSlice";
-import { CATEGORIES, PARTNER_STATUS_LABEL, money } from "../../utils/format";
+import { PARTNER_STATUS_LABEL, money } from "../../utils/format";
 import { Modal } from "../../components/ui/Modal";
-import { Field, Input, Select, Textarea } from "../../components/ui/Field";
+import { Field, Input, Textarea } from "../../components/ui/Field";
 
 const EMPTY = {
   name: "",
-  category: "Yoga",
   city: "Seignosse",
   address: "",
   description: "",
   active: true,
 };
 
-const FIELDS = ["name", "category", "city", "address", "description"];
+const FIELDS = ["name", "city", "address", "description"];
 
 // Fields not shown in the form are re-sent so the PUT does not erase them.
 const PRESERVED = [
-  "latitude",
-  "longitude",
   "phone",
   "professionalEmail",
   "website",
@@ -45,7 +42,6 @@ const PRESERVED = [
   "desiredSeats",
   "managerFirstName",
   "managerLastName",
-  "managerRole",
 ];
 
 function PartnerModal({ open, partner, onClose }) {
@@ -71,7 +67,7 @@ function PartnerModal({ open, partner, onClose }) {
   const submit = async (event) => {
     event.preventDefault();
     const next = {};
-    for (const key of ["name", "category", "city", "address"]) {
+    for (const key of ["name", "city", "address"]) {
       if (!form[key].trim()) next[key] = "Champ obligatoire";
     }
     setErrors(next);
@@ -103,25 +99,15 @@ function PartnerModal({ open, partner, onClose }) {
     <Modal
       open={open}
       title={partner ? "Modifier le partenaire" : "Nouveau partenaire"}
-
       onClose={close}
     >
       <form onSubmit={submit} className="flex flex-col gap-3">
         <Field label="Nom du club" error={errors.name}>
           <Input value={form.name} onChange={set("name")} />
         </Field>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <Field label="Catégorie principale" error={errors.category}>
-            <Select
-              value={form.category}
-              onChange={set("category")}
-              options={CATEGORIES}
-            />
-          </Field>
-          <Field label="Ville" error={errors.city}>
-            <Input value={form.city} onChange={set("city")} />
-          </Field>
-        </div>
+        <Field label="Ville" error={errors.city}>
+          <Input value={form.city} onChange={set("city")} />
+        </Field>
         <Field label="Adresse" error={errors.address}>
           <Input value={form.address} onChange={set("address")} />
         </Field>
@@ -200,7 +186,6 @@ export default function AdminPartners() {
               <tr>
                 {[
                   "Partenaire",
-                  "Catégorie",
                   "Adresse",
                   "Activités",
                   "Check-ins",
@@ -226,7 +211,6 @@ export default function AdminPartners() {
                     className="border-b border-border last:border-0"
                   >
                     <td className="px-3 py-4 font-medium">{p.name}</td>
-                    <td className="px-3 py-4">{p.category}</td>
                     <td className="px-3 py-4 text-muted-foreground">
                       {p.address}, {p.city}
                     </td>

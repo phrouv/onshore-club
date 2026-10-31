@@ -10,6 +10,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class StorageProperties {
 
   private String bucketName;
-  private String proxyEndpoint;
-  private String localFileBaseDirectory;
+  private String endpoint;
+  private String region;
+  private String publicBaseUrl;
+  private String accessKey;
+  private String secretKey;
 }

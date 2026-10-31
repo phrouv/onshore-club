@@ -16,7 +16,7 @@ Before generating content, you MUST scan:
 - `services.sh` - For service names, folders and ports
 - `microservices/services/*/src/` - For actual service implementations and APIs
 - `config-repo/` - For centralized configuration and integration settings
-- `specifications/database/` - For data model and database architecture
+- `../../documentation` - For data model and database architecture
 
 ## Input Parameters
 - `{{DATE}}` - Date for the document (format: YYYY-MM-DD)
@@ -42,11 +42,11 @@ The generated content must:
 - Use consistent terminology throughout the section
 
 ## Template to Follow
-Use the overall architecture template located at `specifications/templates/paragraphs/03-overall-architecture-template.md`
+Use the overall architecture template located at `../../documentation`
 
 ## Output Location
 Save the generated architecture section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/03-overall-architecture.md`
+`../../documentation`
 
 ## Mermaid Diagram Guidelines
 - Use `graph TB` for top-bottom architecture diagrams
@@ -64,7 +64,7 @@ Input:
 - INTEGRATION_POINTS: REST API integration with Payment Service Provider X
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/03-overall-architecture.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Ensure diagrams are readable and not overly complex

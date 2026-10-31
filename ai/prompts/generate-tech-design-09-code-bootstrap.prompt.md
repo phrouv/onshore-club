@@ -42,11 +42,11 @@ The generated content must:
 - Be immediately usable by development teams
 
 ## Template to Follow
-Use the code bootstrap template located at `specifications/templates/paragraphs/09-code-bootstrap-template.md`
+Use the code bootstrap template located at `../../documentation`
 
 ## Output Location
 Save the generated code bootstrap section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/09-code-bootstrap.md`
+`../../documentation`
 
 ## Example Usage
 Input:
@@ -57,7 +57,7 @@ Input:
 - CONFIGURATION_CODE: PaymentConfiguration with beans, properties, and conditional configurations
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/09-code-bootstrap.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Use modern Java features and Spring Boot best practices

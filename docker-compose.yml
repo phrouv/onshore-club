@@ -28,6 +28,9 @@ services:
       timeout: 10s
       retries: 10
       start_period: 10s
+    volumes:
+      - userdb:/var/lib/postgresql
+    
     networks:
       - onshore
 
@@ -49,6 +52,8 @@ services:
       timeout: 10s
       retries: 10
       start_period: 10s
+    volumes:
+      - paymentdb:/var/lib/postgresql
     networks:
       - onshore
 
@@ -70,6 +75,8 @@ services:
       timeout: 10s
       retries: 10
       start_period: 10s
+    volumes:
+      - bookingdb:/var/lib/postgresql
     networks:
       - onshore
 
@@ -91,6 +98,8 @@ services:
       timeout: 10s
       retries: 10
       start_period: 10s
+    volumes:
+      - partnerdb:/var/lib/postgresql
     networks:
       - onshore
 
@@ -112,6 +121,8 @@ services:
       timeout: 10s
       retries: 10
       start_period: 10s
+    volumes:
+      - planningdb:/var/lib/postgresql
     networks:
       - onshore
 
@@ -133,6 +144,8 @@ services:
       timeout: 10s
       retries: 10
       start_period: 10s
+    volumes:
+      - creditdb:/var/lib/postgresql
     networks:
       - onshore
 
@@ -154,6 +167,8 @@ services:
       timeout: 10s
       retries: 10
       start_period: 10s
+    volumes:
+      - payoutdb:/var/lib/postgresql
     networks:
       - onshore
 
@@ -175,8 +190,38 @@ services:
       timeout: 10s
       retries: 10
       start_period: 10s
+    volumes:
+      - admindb:/var/lib/postgresql
     networks:
       - onshore
+
+  # ===========================================================================
+  # MINIO — S3-compatible object storage (category images)
+  # ===========================================================================
+  minio:
+    image: bitnamilegacy/minio:2025.7.23
+    container_name: minio
+    mem_limit: 512m
+    mem_reservation: 256m
+    cpus: 0.5
+    ports:
+      - "127.0.0.1:9000:9000" # LOCALHOST ONLY - S3 API
+      - "127.0.0.1:9001:9001" # LOCALHOST ONLY - web console
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-onshore}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-onshore-secret}
+      MINIO_BROWSER: "on"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - minio_data:/bitnami/minio/data
+    networks:
+      - onshore
+    restart: unless-stopped
 
   # ===========================================================================
   # PGADMIN — Web-based PostgreSQL management tool
@@ -536,6 +581,8 @@ services:
         condition: service_healthy
       admindb:
         condition: service_healthy
+      minio:
+        condition: service_healthy
     environment:
       SPRING_APPLICATION_NAME: "admin-service"
       SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
@@ -543,6 +590,10 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: root
       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+      COM_ONSHORE_STORAGE_ENDPOINT: http://minio:9000
+      COM_ONSHORE_STORAGE_PUBLICBASEURL: http://localhost:9000/onshorebucket
+      COM_ONSHORE_STORAGE_ACCESSKEY: ${MINIO_ROOT_USER:-onshore}
+      COM_ONSHORE_STORAGE_SECRETKEY: ${MINIO_ROOT_PASSWORD:-onshore-secret}
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: "http://service-registry:8761/eureka/"
       JAVA_TOOL_OPTIONS: "-Xms128m -Xmx384m -XX:+UseG1GC"
     restart: unless-stopped
@@ -552,3 +603,14 @@ services:
 networks:
   onshore:
     driver: bridge
+
+volumes:
+  userdb:
+  paymentdb:
+  bookingdb:
+  partnerdb:
+  planningdb:
+  creditdb:
+  payoutdb:
+  admindb:
+  minio_data:

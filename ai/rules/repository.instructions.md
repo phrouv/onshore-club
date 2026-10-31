@@ -19,7 +19,7 @@ All repository contributions must follow these unified rules so every AI / devel
 | `onshore-frontend/`                            | React (Vite, Redux Toolkit, React Router, Tailwind) frontend          |
 | `ai/`                                          | AI prompts & rule instruction files used for generation & automation  |
 | `ai/rules/`                                    | Instruction rule sets (this file resides here)                        |
-| `specifications/`                              | Functional & technical specs (epics, backlog, api-specs, tech design) |
+| `../../documentation`                              | Functional & technical specs (epics, backlog, api-specs, tech design) |
 | `docker-compose.yml`, `docker-compose.dev.yml` | Local stack definition                                                |
 | `services.sh`                                  | Build / start / stop script (`-l`, `-b`, `-up`, `-s`)                 |
 | `init-databases.sql`                           | Per-service database initialization                                   |

@@ -18,7 +18,7 @@ e2e-reboot/published-tests/<YYYY-MM-DD_HHMMSS>/
 
 | Source | Destination in snapshot | Notes |
 |--------|------------------------|-------|
-| `specifications/test-specification/release-20260120/*.csv` | `acceptance-criteria/` | All AC CSV files, filename prefixed with timestamp |
+| `../../documentation` | `acceptance-criteria/` | All AC CSV files, filename prefixed with timestamp |
 | `e2e-reboot/features/*.feature` | `features/` | All Gherkin feature files |
 | `e2e-reboot/playwright-report/all/results.xml` | `execution-report/results.xml` | JUnit XML report |
 | `e2e-reboot/playwright-report/all/index.html` | `execution-report/index.html` | HTML report entry point |

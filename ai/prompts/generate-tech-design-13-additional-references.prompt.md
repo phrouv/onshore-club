@@ -30,11 +30,11 @@ The generated content must:
 - Serve multiple audiences with varying levels of technical expertise
 
 ## Template to Follow
-Use the additional references template located at `specifications/templates/paragraphs/13-additional-references-template.md`
+Use the additional references template located at `../../documentation`
 
 ## Output Location
 Save the generated additional references section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/13-additional-references.md`
+`../../documentation`
 
 ## Example Usage
 Input:
@@ -43,7 +43,7 @@ Input:
 - REFERENCES: PSP API documentation, internal architecture docs, Spring Boot references, monitoring tools, training materials, compliance guidelines
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/13-additional-references.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Verify all links are accessible and current

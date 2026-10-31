@@ -39,11 +39,11 @@ The generated content must:
 - Be actionable for development and operations teams
 
 ## Template to Follow
-Use the technical notes template located at `specifications/templates/paragraphs/04-technical-notes-template.md`
+Use the technical notes template located at `../../documentation`
 
 ## Output Location
 Save the generated technical notes section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/04-technical-notes.md`
+`../../documentation`
 
 ## Example Usage
 Input:
@@ -54,7 +54,7 @@ Input:
 - DEPENDENCIES: Spring Boot 3.x, PostgreSQL, Redis cache, Payment Provider SDK
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/04-technical-notes.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Include specific version numbers for all dependencies

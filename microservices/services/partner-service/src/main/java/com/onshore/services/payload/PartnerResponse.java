@@ -10,10 +10,7 @@ public record PartnerResponse(
     String address,
     String city,
     String description,
-    String category,
     PartnerStatus status,
-    Double latitude,
-    Double longitude,
     String phone,
     String professionalEmail,
     String website,
@@ -22,6 +19,6 @@ public record PartnerResponse(
     String desiredSeats,
     String managerFirstName,
     String managerLastName,
-    String managerRole,
     UUID ownerUserId,
-    Instant createdAt) {}
+    Instant createdAt,
+    Instant lastModifiedDate) {}

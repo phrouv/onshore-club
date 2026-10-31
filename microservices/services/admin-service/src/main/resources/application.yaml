@@ -15,9 +15,12 @@ spring:
 com:
   onshore:
     storage:
-      proxy-endpoint: http://127.0.0.1:8081
+      endpoint: http://localhost:9000
+      region: us-east-1
+      public-base-url: http://localhost:9000/onshorebucket
       bucket-name: onshorebucket
-      local-file-base-directory: tmp-store
+      access-key: onshore
+      secret-key: onshore-secret
 
 info:
   app:

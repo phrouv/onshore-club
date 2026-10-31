@@ -8,11 +8,11 @@ Generate the document title section for a tech design document using ONLY inform
 
 ## Repository Sources to Analyze
 Before generating content, you MUST scan:
-- `specifications/` - For existing project documentation
+- `../../documentation` - For existing project documentation
 - `microservices/README.md` - For project overview and team information
 - `microservices/pom.xml` and `microservices/services/pom.xml` - For service/module definitions
 - `onshore-frontend/README.md` - For frontend overview
-- `specifications/epics/` - For epic names and authors
+- `../../documentation` - For epic names and authors
 
 ## Input Parameters
 - `{{DATE}}` - Date for the document (format: YYYY-MM-DD)
@@ -35,11 +35,11 @@ The generated content must:
 - Be suitable for professional technical documentation
 
 ## Template to Follow
-Use the document title template located at `specifications/templates/paragraphs/01-document-title-template.md`
+Use the document title template located at `../../documentation`
 
 ## Output Location
 Save the generated document title section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/01-document-title.md`
+`../../documentation`
 
 ## Example Usage
 Input:
@@ -49,7 +49,7 @@ Input:
 - AUTHORS: John Doe, Jane Smith
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/01-document-title.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Ensure the title is specific and descriptive

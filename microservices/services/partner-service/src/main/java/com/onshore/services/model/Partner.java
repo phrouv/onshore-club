@@ -1,14 +1,12 @@
 package com.onshore.services.model;
 
 import com.onshore.common_lib.enums.PartnerStatus;
+import com.onshore.common_lib.model.AbstractFullAuditingEntity;
 import jakarta.persistence.*;
-import java.io.Serializable;
-import java.time.Instant;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import java.util.UUID;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
@@ -16,67 +14,70 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "partners")
-public class Partner implements Serializable, Persistable<UUID> {
+@Table(
+    name = "partners",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          columnNames = {"name"},
+          name = "uk_partner_name")
+    })
+public class Partner extends AbstractFullAuditingEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
-  private UUID id;
-
-  @Column(nullable = false)
+  @NotNull(message = "name is required")
+  @Size(max = 100, message = "name must not exceed 100 characters")
+  @Column(name = "name", length = 100, nullable = false)
   private String name;
 
-  @Column(nullable = false)
+  @NotNull(message = "address is required")
+  @Size(max = 500, message = "address must not exceed 500 characters")
+  @Column(name = "address", length = 500, nullable = false)
   private String address;
 
-  @Column(nullable = false)
+  @NotNull(message = "city is required")
+  @Size(max = 500, message = "city must not exceed 500 characters")
+  @Column(name = "city", length = 500, nullable = false)
   private String city;
 
-  @Column(columnDefinition = "text")
+  @Column(name = "description", columnDefinition = "text")
   private String description;
 
-  @Column(nullable = false)
-  private String category;
-
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false, length = 20)
+  @Column(name = "status", nullable = false, length = 20)
   @Builder.Default
   private PartnerStatus status = PartnerStatus.PENDING;
 
-  private Double latitude;
-
-  private Double longitude;
-
+  @Size(max = 100, message = "phone must not exceed 100 characters")
+  @Column(name = "phone", length = 100)
   private String phone;
 
+  @Size(max = 500, message = "professionalEmail must not exceed 500 characters")
+  @Column(name = "professional_email", length = 500)
   private String professionalEmail;
 
+  @Size(max = 500, message = "website must not exceed 500 characters")
+  @Column(name = "website", length = 500)
   private String website;
 
+  @Size(max = 500, message = "instagram must not exceed 500 characters")
+  @Column(name = "instagram", length = 500)
   private String instagram;
 
-  @Column(columnDefinition = "text")
+  @Column(name = "activity_types", columnDefinition = "text")
   private String activityTypes;
 
+  @Size(max = 255, message = "desiredSeats must not exceed 255 characters")
+  @Column(name = "desired_seats", length = 255)
   private String desiredSeats;
 
+  @Size(max = 100, message = "managerFirstName must not exceed 100 characters")
+  @Column(name = "manager_first_name", length = 100)
   private String managerFirstName;
 
+  @Size(max = 100, message = "managerLastName must not exceed 100 characters")
+  @Column(name = "manager_last_name", length = 100)
   private String managerLastName;
 
-  private String managerRole;
-
-  @Column(nullable = false)
+  @NotNull(message = "ownerUserId is required")
+  @Column(name = "owner_user_id", nullable = false)
   private UUID ownerUserId;
-
-  @CreatedDate
-  @Column(updatable = false, nullable = false)
-  private Instant createdAt;
-
-  @Override
-  public boolean isNew() {
-    return this.id == null;
-  }
 }

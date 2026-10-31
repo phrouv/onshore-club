@@ -29,11 +29,11 @@ The generated content must:
 - Be detailed enough for development teams to begin implementation
 
 ## Template to Follow
-Use the solution approach template located at `specifications/templates/paragraphs/05-solution-approach-template.md`
+Use the solution approach template located at `../../documentation`
 
 ## Output Location
 Save the generated solution approach section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/05-solution-approach.md`
+`../../documentation`
 
 ## Example Usage
 Input:
@@ -43,7 +43,7 @@ Input:
 - KEY_DESIGN_DECISIONS: Use synchronous processing for real-time confirmation, implement circuit breaker pattern, choose populator over direct mapping
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/05-solution-approach.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Organize phases logically with clear dependencies

@@ -20,11 +20,11 @@
     <name>OnShore System</name>
     <description>OnShore GDS Microservices Parent</description>
 
-     <!-- prerequisites had been marked deprecated for a long time (starting
-        with Maven 3.0). The intention of prerequisites was to prevent maven plugins
-        running with the wrong Maven versions. The best thing is to use Enforcer
-        plugin. Unfortunately prerequisites is needed for "mvn versions:display-plugin-updates"
-        command to work well. -->
+    <!-- prerequisites had been marked deprecated for a long time (starting
+       with Maven 3.0). The intention of prerequisites was to prevent maven plugins
+       running with the wrong Maven versions. The best thing is to use Enforcer
+       plugin. Unfortunately prerequisites is needed for "mvn versions:display-plugin-updates"
+       command to work well. -->
     <prerequisites>
         <maven>${maven.version}</maven>
     </prerequisites>
@@ -54,7 +54,7 @@
     -->
     <properties>
         <!-- Java version for compilation -->
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <maven.version>3.10.0</maven.version>
         <maven.compiler.release>${java.version}</maven.compiler.release>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -82,6 +82,7 @@
         <razorpay-java.version>1.4.10</razorpay-java.version>
         <stripe-java.version>34.0.0</stripe-java.version>
         <twilio.version>13.1.0</twilio.version>
+        <aws-sdk-bom.version>2.57.8</aws-sdk-bom.version>
 
         <!-- Plugins Versions -->
         <spotless-maven-plugin.version>3.10.4</spotless-maven-plugin.version>
@@ -103,14 +104,6 @@
         - BOMs are like a "version catalog" — they list hundreds of compatible library versions
         - Child modules declare dependencies WITHOUT <version> tags
         - Maven looks up the version from these BOMs automatically
-
-        Example: When a child declares spring-boot-starter-web without a version,
-        Maven resolves it to 4.2.0-M2 because that's what spring-boot-dependencies 4.2.0-M2 specifies.
-
-        WHY use BOMs instead of specifying versions individually?
-        Spring Boot 4.2.0-M2 is tested with specific versions of Jackson, Hibernate, Tomcat, etc.
-        The BOM ensures you get those exact tested-compatible versions.
-        Manually picking versions risks incompatible library combinations.
     -->
     <dependencyManagement>
         <dependencies>
@@ -149,6 +142,14 @@
             </dependency>
 
             <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws-sdk-bom.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
@@ -171,6 +172,7 @@
                 <artifactId>stripe-java</artifactId>
                 <version>${stripe-java.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -211,6 +213,8 @@
                         <source>${java.version}</source>
                         <target>${java.version}</target>
                         <parameters>true</parameters>
+                        <!-- JDK 23+ no longer runs annotation processors (Lombok) found on the classpath by default -->
+                        <proc>full</proc>
                     </configuration>
                 </plugin>
                 <!--
@@ -322,28 +326,30 @@
                     </executions>
                 </plugin>
                 <plugin>
-    <groupId>org.apache.maven.plugins</groupId>
-    <artifactId>maven-enforcer-plugin</artifactId>
-    <version>${maven-enforcer-plugin.version}</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>enforce</goal>
-            </goals>
-            <configuration>
-                <rules>
-                    <requireMavenVersion>
-                        <version>${maven.version}</version>
-                        <message>Unfortunately, the correct maven version is not supported by your system</message>
-                    </requireMavenVersion>
-                    <requireJavaVersion>
-                        <version>${java.version}</version>
-                    </requireJavaVersion>
-                </rules>
-            </configuration>
-        </execution>
-    </executions>
-</plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven-enforcer-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>enforce</goal>
+                            </goals>
+                            <configuration>
+                                <rules>
+                                    <requireMavenVersion>
+                                        <version>${maven.version}</version>
+                                        <message>Unfortunately, the correct maven version is not supported by your
+                                            system
+                                        </message>
+                                    </requireMavenVersion>
+                                    <requireJavaVersion>
+                                        <version>${java.version}</version>
+                                    </requireJavaVersion>
+                                </rules>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>

@@ -1,4 +1,4 @@
-import { del, get, post, put } from "../utils/api";
+import { del, get, patch, post, put } from "../utils/api";
 
 export const adminService = {
   dashboard: () => get("/api/admin/dashboard"),
@@ -8,4 +8,10 @@ export const adminService = {
   deleteRule: (id) => del(`/api/admin/usage-rules/${id}`),
   settings: () => get("/api/admin/settings"),
   saveSettings: (body) => put("/api/admin/settings", body),
+  categories: () => get("/api/categories"),
+  createCategory: (body) => post("/api/categories", body),
+  updateCategory: (code, body) =>
+    put(`/api/categories/${encodeURIComponent(code)}`, body),
+  setCategoryStatus: (code, active) =>
+    patch(`/api/categories/${encodeURIComponent(code)}/status`, { active }),
 };

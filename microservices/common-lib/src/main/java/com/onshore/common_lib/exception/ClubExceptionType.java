@@ -3,6 +3,7 @@ package com.onshore.common_lib.exception;
 /** Stable business error codes shared by the club microservices. */
 public enum ClubExceptionType {
   INVALID_PAYLOAD(400, "Structural or semantic validation failure"),
+  CATEGORY_CODE_IMMUTABLE(400, "Category code cannot be changed"),
   FORBIDDEN_OPERATION(403, "Operation not permitted"),
   UNKNOWN_EXCEPTION(500, "Unexpected error"),
   UPSTREAM_ERROR(502, "Upstream service error"),
@@ -16,8 +17,10 @@ public enum ClubExceptionType {
   PAYOUT_NOT_FOUND(404, "Payout not found"),
   USAGE_RULE_NOT_FOUND(404, "Usage rule not found"),
   CREDIT_SETTING_NOT_FOUND(404, "Credit setting not found"),
+  CATEGORY_NOT_FOUND(404, "Category not found"),
 
   PARTNER_ALREADY_EXISTS(409, "Partner already exists"),
+  CATEGORY_ALREADY_EXISTS(409, "Category already exists"),
   PARTNER_NOT_ACTIVE(409, "Partner not active"),
   CLASS_CLOSED(409, "Class closed"),
   CLASS_PAST(409, "Class already past"),

@@ -81,11 +81,11 @@ All 12 entity enum fields use `@Enumerated(EnumType.STRING)` and have `VARCHAR` 
 
 ## Tech stack
 
-Java 21 · Spring Boot 4.1.2 · Spring Cloud 2025.1.3 (Gateway MVC, Eureka, Config, OpenFeign) · Spring Data JPA (Hibernate `ddl-auto: update`) · PostgreSQL 18 · Redis · Apache Kafka (KRaft) · Resilience4j · JJWT · Razorpay / Stripe · Maven multi-module · Jib · Spotless (`hooks/pre-commit.sh`).
+Java 25 · Spring Boot 4.1.2 · Spring Cloud 2025.1.3 (Gateway MVC, Eureka, Config, OpenFeign) · Spring Data JPA (Hibernate `ddl-auto: update`) · PostgreSQL 18 · Redis · Apache Kafka (KRaft) · Resilience4j · JJWT · Razorpay / Stripe · Maven multi-module · Jib · Spotless (`hooks/pre-commit.sh`).
 
 ## Run
 
-Prerequisites: Java 21, Maven 3.9+, Docker, Node (frontend only).
+Prerequisites: Java 25, Maven 3.9+, Docker, Node (frontend only).
 
 **Full stack in Docker** (from the repo root):
 

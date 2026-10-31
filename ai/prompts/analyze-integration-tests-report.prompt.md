@@ -248,7 +248,7 @@ List all distinct `key_test_data` values found across tests, grouped by type:
 
 - **Script**: `scripts/extract_test_metadata.py`
 - **JSON output**: `scripts/test_metadata.json`
-- **Report location**: `specifications/deliverables/`
+- **Report location**: `../../documentation`
 - **Report filename**: `{YYYY-MM-DD}-integration-tests-analysis-report-v1.0.md`
 
 ---
@@ -268,4 +268,4 @@ List all distinct `key_test_data` values found across tests, grouped by type:
 2. Run the script: `python scripts/extract_test_metadata.py`
 3. Verify `scripts/test_metadata.json` is valid and complete
 4. Generate the markdown report from the JSON data
-5. Save the report to `specifications/deliverables/{YYYY-MM-DD}-integration-tests-analysis-report-v1.0.md`
+5. Save the report to `../../documentation`

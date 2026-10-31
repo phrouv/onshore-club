@@ -75,8 +75,8 @@ ai/rules/
 
 | Rule                                                                       | applyTo                                        | Description                                                |
 | -------------------------------------------------------------------------- | ---------------------------------------------- | ---------------------------------------------------------- |
-| [conception/conception-phase](conception/conception-phase.instructions.md) | `specifications/**`                            | AI-assisted conception phase                               |
-| [security/security-context](security/security-context.instructions.md)     | `specifications/epics/**/evil-user-stories/**` | Attack surface and security controls for evil user stories |
+| [conception/conception-phase](conception/conception-phase.instructions.md) | `../../documentation`                            | AI-assisted conception phase                               |
+| [security/security-context](security/security-context.instructions.md)     | `../../documentation` | Attack surface and security controls for evil user stories |
 
 ## Adding a New Rule
 

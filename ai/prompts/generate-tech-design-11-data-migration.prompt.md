@@ -12,7 +12,7 @@ Generate data migration documentation using ONLY database schemas, migration scr
 
 Before generating content, you MUST scan:
 
-- `specifications/database/` - For actual database schema documentation
+- `../../documentation` - For actual database schema documentation
 - `init-databases.sql` and `docker-compose.yml` - For database provisioning
 - `microservices/services/*/src/main/resources/db/changelog/` - For existing Liquibase migration files
 - `microservices/services/*/src/main/java/com/onshore/services/model/` - For actual JPA entity definitions and data models
@@ -49,12 +49,12 @@ The generated content must:
 
 ## Template to Follow
 
-Use the data migration template located at `specifications/templates/paragraphs/11-data-migration-template.md`
+Use the data migration template located at `../../documentation`
 
 ## Output Location
 
 Save the generated data migration section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/11-data-migration.md`
+`../../documentation`
 
 ## Example Usage
 
@@ -67,7 +67,7 @@ Input:
 - SAMPLE_SCRIPTS: SQL scripts for payment reference generation, historical payment record creation, validation queries
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/11-data-migration.md`
+`../../documentation`
 
 ## Quality Guidelines
 

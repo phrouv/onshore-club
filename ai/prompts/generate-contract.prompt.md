@@ -7,7 +7,7 @@ You are an expert API designer. Generate a complete OpenAPI 3.0 specification ba
 
 ## Output Directory
 
-- Save the generated OpenAPI spec in `specifications/api-specs/[feature-name]-api.yaml`
+- Save the generated OpenAPI spec in `../../documentation`
 
 ## Input Requirements
 Analyze the feature description and extract:

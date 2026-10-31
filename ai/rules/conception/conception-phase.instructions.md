@@ -53,7 +53,7 @@ All epic documentation must now follow this structure:
 documentation/epics/
 └── EPNNN - [EPIC_NAME]/
     ├── EPNNN - [EPIC_NAME].md           # Contains personas, epic definition, and user story list
-    └── use-cases/
+    └── user-stories/
         ├── US001 - list-organizations/
         │   └── description.md
         ├── US005 - create-organization/

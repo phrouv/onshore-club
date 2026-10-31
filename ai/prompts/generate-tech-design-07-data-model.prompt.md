@@ -31,11 +31,11 @@ The generated content must:
 - Be executable by database administrators
 
 ## Template to Follow
-Use the data model template located at `specifications/templates/paragraphs/07-data-model-template.md`
+Use the data model template located at `../../documentation`
 
 ## Output Location
 Save the generated data model section to:
-`specifications/documents-generator/technical-documention/{{DATE}}-v{{VERSION}}/07-data-model-schema-update.md`
+`../../documentation`
 
 ## Example Usage
 Input:
@@ -45,7 +45,7 @@ Input:
 - MIGRATION_PLAN: 3-phase migration with schema updates, data backfill, and application deployment
 
 This would create the file at:
-`specifications/documents-generator/technical-documention/2025-11-04-v1.0/07-data-model-schema-update.md`
+`../../documentation`
 
 ## Quality Guidelines
 - Include complete field specifications with data types and constraints

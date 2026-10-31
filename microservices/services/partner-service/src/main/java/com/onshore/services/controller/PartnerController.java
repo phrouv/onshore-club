@@ -30,11 +30,10 @@ public class PartnerController {
   public List<PartnerResponse> list(
       @RequestParam(required = false) PartnerStatus status,
       @RequestParam(required = false) String city,
-      @RequestParam(required = false) String category,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
     // Only admins may browse non-approved partners.
     PartnerStatus effective = Roles.isAdmin(roles) ? status : PartnerStatus.ACTIVE;
-    return partnerService.list(effective, city, category);
+    return partnerService.list(effective, city);
   }
 
   @GetMapping("/mine")
