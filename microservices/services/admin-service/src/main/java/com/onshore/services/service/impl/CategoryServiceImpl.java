@@ -1,5 +1,6 @@
 package com.onshore.services.service.impl;
 
+import com.onshore.common_lib.club.CategoryInfo;
 import com.onshore.common_lib.exception.ApiException;
 import com.onshore.common_lib.exception.ClubExceptionType;
 import com.onshore.services.mapper.CategoryMapper;
@@ -11,6 +12,7 @@ import com.onshore.services.service.CategoryService;
 import com.onshore.services.service.ImageStorageService;
 import java.util.Base64;
 import java.util.List;
+import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -76,6 +78,12 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   @Transactional(readOnly = true)
+  public CategoryInfo info(UUID id) {
+    return CategoryMapper.toInfo(findById(id));
+  }
+
+  @Override
+  @Transactional(readOnly = true)
   public List<CategoryResponse> list(boolean activeOnly) {
     return categoryRepository.findAll().stream()
         .filter(c -> !activeOnly || c.isActive())
@@ -91,6 +99,15 @@ public class CategoryServiceImpl implements CategoryService {
             () ->
                 new ApiException(
                     ClubExceptionType.CATEGORY_NOT_FOUND, "Category not found: " + normalized));
+  }
+
+  private Category findById(UUID id) {
+    return categoryRepository
+        .findById(id)
+        .orElseThrow(
+            () ->
+                new ApiException(
+                    ClubExceptionType.CATEGORY_NOT_FOUND, "Category not found: " + id));
   }
 
   /** Accepts a Base64 payload or a data URL holding a JPEG or PNG, and returns its stored URL. */

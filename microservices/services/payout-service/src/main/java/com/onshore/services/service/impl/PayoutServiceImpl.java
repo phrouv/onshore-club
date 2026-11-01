@@ -4,9 +4,9 @@ import com.onshore.common_lib.club.PartnerInfo;
 import com.onshore.common_lib.club.PayoutCreateRequest;
 import com.onshore.common_lib.club.PayoutStats;
 import com.onshore.common_lib.enums.PayoutStatus;
+import com.onshore.common_lib.enums.UserRole;
 import com.onshore.common_lib.exception.ApiException;
 import com.onshore.common_lib.exception.ClubExceptionType;
-import com.onshore.common_lib.security.Roles;
 import com.onshore.services.client.PartnerClient;
 import com.onshore.services.mapper.PartnerPayoutMapper;
 import com.onshore.services.model.PartnerPayout;
@@ -139,7 +139,7 @@ public class PayoutServiceImpl implements PayoutService {
 
   /** Partners only see their own venue; admins see everything (partnerId may then be null). */
   private void authorize(UUID partnerId, UUID userId, String roles) {
-    if (Roles.isAdmin(roles)) return;
+    if (UserRole.isAdmin(roles)) return;
     if (partnerId == null) {
       throw new ApiException(ClubExceptionType.FORBIDDEN_OPERATION, "partnerId is required");
     }

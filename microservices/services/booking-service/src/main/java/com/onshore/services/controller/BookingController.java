@@ -1,9 +1,9 @@
 package com.onshore.services.controller;
 
 import com.onshore.common_lib.club.BookingStats;
+import com.onshore.common_lib.enums.UserRole;
 import com.onshore.common_lib.exception.ApiException;
 import com.onshore.common_lib.exception.ClubExceptionType;
-import com.onshore.common_lib.security.Roles;
 import com.onshore.services.payload.BookRequest;
 import com.onshore.services.payload.BookingResponse;
 import com.onshore.services.payload.CodeRequest;
@@ -87,7 +87,7 @@ public class BookingController {
   }
 
   private static void requirePartnerOrAdmin(String roles) {
-    if (!Roles.isAdmin(roles) && !Roles.has(roles, Roles.PARTNER)) {
+    if (!UserRole.isAdmin(roles) && !UserRole.has(roles, UserRole.ROLE_PARTNER.name())) {
       throw new ApiException(
           ClubExceptionType.FORBIDDEN_OPERATION, "Partner or admin role required");
     }

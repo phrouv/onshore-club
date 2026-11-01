@@ -18,9 +18,11 @@ public enum ClubExceptionType {
   USAGE_RULE_NOT_FOUND(404, "Usage rule not found"),
   CREDIT_SETTING_NOT_FOUND(404, "Credit setting not found"),
   CATEGORY_NOT_FOUND(404, "Category not found"),
+  CLUB_NOT_FOUND(404, "Club not found"),
 
   PARTNER_ALREADY_EXISTS(409, "Partner already exists"),
   CATEGORY_ALREADY_EXISTS(409, "Category already exists"),
+  CLUB_ALREADY_EXISTS(409, "Club already exists"),
   PARTNER_NOT_ACTIVE(409, "Partner not active"),
   CLASS_CLOSED(409, "Class closed"),
   CLASS_PAST(409, "Class already past"),

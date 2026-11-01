@@ -6,7 +6,7 @@
 | Document status | Draft                                                  |
 | Type            | Specification of an existing entity, with enhancements |
 | Owner           | _TBD_                                                  |
-| Last updated    | 2026-10-31                                             |
+| Last updated    | 2026-11-01                                             |
 
 ## 1. Introduction
 
@@ -79,7 +79,7 @@ Define the requirements for the **partner** entity (a venue or studio offering a
 | ID    | Requirement                                                                                                            | Priority |
 | ----- | ---------------------------------------------------------------------------------------------------------------------- | -------- |
 | FR-01 | An operator with an admin role can create a partner; it is created as `PENDING`.                                       | Must     |
-| FR-02 | A partner cannot be created with an `ownerUserId` that already owns another partner (409 `PARTNER_ALREADY_EXISTS`).    | Must     |
+| FR-02 | A user may own several partners; creating a partner for an owner who already owns one is allowed.                      | Must     |
 | FR-03 | `name` and the address fields (`street`, `city`, `zipCode`) are mandatory; all other profile fields are optional.      | Must     |
 | FR-04 | Only an operator with an admin role can update the partner profile.                                                    | Must     |
 | FR-05 | Only an admin can change a partner's status.                                                                           | Must     |
@@ -95,7 +95,7 @@ Define the requirements for the **partner** entity (a venue or studio offering a
 
 ## 5. Business rules
 
-- BR-01: A user owns at most one partner.
+- BR-01: A user may own several partners.
 - BR-02: `ownerUserId` is immutable once the partner is created.
 - BR-03: Only `ACTIVE` partners are publicly visible.
 - BR-04: `status` and `ownerUserId` cannot be set through the profile update (`PUT`); status changes go through `PATCH /status`.
@@ -144,7 +144,7 @@ Define the requirements for the **partner** entity (a venue or studio offering a
 
 Responses add `id`, `status` and `createdAt`.
 
-**Errors:** `PARTNER_NOT_FOUND` (404), `PARTNER_ALREADY_EXISTS` (409), `PARTNER_NOT_ACTIVE` (409), `FORBIDDEN_OPERATION` (403).
+**Errors:** `PARTNER_NOT_FOUND` (404), `PARTNER_NOT_ACTIVE` (409), `FORBIDDEN_OPERATION` (403).
 
 Existing endpoints affected: `/api/activities`, bookings and payouts (partner status checks).
 
@@ -157,7 +157,7 @@ Existing endpoints affected: `/api/activities`, bookings and payouts (partner st
 As an admin, I want to create partner records so that venues are registered on the platform.
 
 - **Given** I am an admin, **when** I submit valid mandatory fields with an owner user id, **then** a partner is created with status `PENDING`.
-- **Given** the provided owner already owns a partner, **when** I create another, **then** I get a 409.
+- **Given** the provided owner already owns a partner, **when** I create another, **then** the partner is created.
 - **Given** a mandatory field is missing, **when** I create a partner, **then** I get a 400 validation error.
 - **Given** an invalid email is provided, **when** I create a partner, **then** I get a 400 validation error.
 - **Given** I am not an admin, **when** I create a partner, **then** I get a 403.
@@ -239,3 +239,4 @@ As a partner owner, I want to be told when my partner is approved, rejected or s
 | ------- | ---------- | ------ | ----------------------------------------------------------------------------- |
 | 0.1     | 2026-10-31 |        | Initial draft                                                                 |
 | 0.2     | 2026-10-31 |        | Remove `category`, `latitude`, `longitude` and `managerRole` from the partner |
+| 0.3     | 2026-11-01 |        | Allow a user to own several partners                                          |

@@ -12,9 +12,9 @@ import com.onshore.common_lib.enums.CheckinMethod;
 import com.onshore.common_lib.enums.ClassStatus;
 import com.onshore.common_lib.enums.CreditTransactionType;
 import com.onshore.common_lib.enums.SessionBookingStatus;
+import com.onshore.common_lib.enums.UserRole;
 import com.onshore.common_lib.exception.ApiException;
 import com.onshore.common_lib.exception.ClubExceptionType;
-import com.onshore.common_lib.security.Roles;
 import com.onshore.services.client.AdminClient;
 import com.onshore.services.client.CreditClient;
 import com.onshore.services.client.PartnerClient;
@@ -275,7 +275,7 @@ public class BookingServiceImpl implements BookingService {
   @Transactional(readOnly = true)
   public List<BookingResponse> list(
       UUID partnerId, LocalDate from, LocalDate to, UUID actorId, String roles) {
-    boolean admin = Roles.isAdmin(roles);
+    boolean admin = UserRole.isAdmin(roles);
     if (!admin) {
       if (partnerId == null) {
         throw new ApiException(ClubExceptionType.FORBIDDEN_OPERATION, "partnerId is required");
@@ -384,7 +384,7 @@ public class BookingServiceImpl implements BookingService {
   }
 
   private void authorizePartner(UUID partnerId, UUID actorId, String roles) {
-    if (Roles.isAdmin(roles)) return;
+    if (UserRole.isAdmin(roles)) return;
     PartnerInfo partner = partnerClient.partner(partnerId);
     if (!partner.ownerUserId().equals(actorId)) {
       throw new ApiException(

@@ -4,40 +4,84 @@ import { planningService } from "../../services/planningService";
 import { payoutService } from "../../services/payoutService";
 import { asyncCases, guarded } from "../../utils/asyncCases";
 
-export const fetchMyPartner = createAsyncThunk("partner/mine", async (_, { rejectWithValue }) => {
-  try {
-    return await partnerService.myPartner();
-  } catch (error) {
-    // 404 only means "no partner application yet".
-    if (error.status === 404) return null;
-    return rejectWithValue(error.message);
-  }
-});
-export const applyAsPartner = createAsyncThunk("partner/apply", guarded((body) => partnerService.signupPartner(body)));
-export const updatePartner = createAsyncThunk("partner/update", guarded(({ id, body }) => partnerService.updatePartner(id, body)));
-export const fetchPartnerActivities = createAsyncThunk("partner/activities", guarded((partnerId) => partnerService.listActivities({ partnerId })));
+export const fetchMyPartner = createAsyncThunk(
+  "partner/mine",
+  async (_, { rejectWithValue }) => {
+    try {
+      return await partnerService.myPartner();
+    } catch (error) {
+      // 404 only means "no partner application yet".
+      if (error.status === 404) return [];
+      return rejectWithValue(error.message);
+    }
+  },
+);
+export const applyAsPartner = createAsyncThunk(
+  "partner/apply",
+  guarded((body) => partnerService.signupPartner(body)),
+);
+export const updatePartner = createAsyncThunk(
+  "partner/update",
+  guarded(({ id, body }) => partnerService.updatePartner(id, body)),
+);
+export const fetchPartnerActivities = createAsyncThunk(
+  "partner/activities",
+  guarded((partnerId) => partnerService.listActivities({ partnerId })),
+);
 export const saveActivity = createAsyncThunk(
   "partner/saveActivity",
-  guarded(({ id, body }) => (id ? partnerService.updateActivity(id, body) : partnerService.createActivity(body))),
+  guarded(({ id, body }) =>
+    id
+      ? partnerService.updateActivity(id, body)
+      : partnerService.createActivity(body),
+  ),
 );
-export const fetchPartnerClasses = createAsyncThunk("partner/classes", guarded((params) => planningService.list(params)));
-export const createClasses = createAsyncThunk("partner/createClasses", guarded((body) => planningService.create(body)));
-export const updateClass = createAsyncThunk("partner/updateClass", guarded(({ id, body }) => planningService.update(id, body)));
-export const closeClass = createAsyncThunk("partner/closeClass", guarded((id) => planningService.close(id)));
-export const reopenClass = createAsyncThunk("partner/reopenClass", guarded((id) => planningService.reopen(id)));
-export const deleteClass = createAsyncThunk("partner/deleteClass", guarded(async (id) => {
-  await planningService.remove(id);
-  return id;
-}));
-export const fetchPayouts = createAsyncThunk("partner/payouts", guarded((partnerId) => payoutService.list({ partnerId })));
-export const fetchMonthly = createAsyncThunk("partner/monthly", guarded((partnerId) => payoutService.monthly(partnerId)));
+export const fetchPartnerClasses = createAsyncThunk(
+  "partner/classes",
+  guarded((params) => planningService.list(params)),
+);
+export const createClasses = createAsyncThunk(
+  "partner/createClasses",
+  guarded((body) => planningService.create(body)),
+);
+export const updateClass = createAsyncThunk(
+  "partner/updateClass",
+  guarded(({ id, body }) => planningService.update(id, body)),
+);
+export const closeClass = createAsyncThunk(
+  "partner/closeClass",
+  guarded((id) => planningService.close(id)),
+);
+export const reopenClass = createAsyncThunk(
+  "partner/reopenClass",
+  guarded((id) => planningService.reopen(id)),
+);
+export const deleteClass = createAsyncThunk(
+  "partner/deleteClass",
+  guarded(async (id) => {
+    await planningService.remove(id);
+    return id;
+  }),
+);
+export const fetchPayouts = createAsyncThunk(
+  "partner/payouts",
+  guarded((partnerId) => payoutService.list({ partnerId })),
+);
+export const fetchMonthly = createAsyncThunk(
+  "partner/monthly",
+  guarded((partnerId) => payoutService.monthly(partnerId)),
+);
 
-const upsert = (list, item) => (list.some((x) => x.id === item.id) ? list.map((x) => (x.id === item.id ? item : x)) : [item, ...list]);
+const upsert = (list, item) =>
+  list.some((x) => x.id === item.id)
+    ? list.map((x) => (x.id === item.id ? item : x))
+    : [item, ...list];
 
 const partnerSlice = createSlice({
   name: "partner",
   initialState: {
     partner: null,
+    partners: [],
     partnerLoaded: false,
     activities: [],
     classes: [],
@@ -49,14 +93,19 @@ const partnerSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     asyncCases(builder, fetchMyPartner, (state, { payload }) => {
-      state.partner = payload;
+      state.partners = payload ?? [];
+      state.partner = state.partners[0] ?? null;
       state.partnerLoaded = true;
     });
     asyncCases(builder, applyAsPartner, (state, { payload }) => {
       state.partner = payload;
+      state.partners = [payload, ...state.partners];
     });
     asyncCases(builder, updatePartner, (state, { payload }) => {
       state.partner = payload;
+      state.partners = state.partners.map((p) =>
+        p.id === payload.id ? payload : p,
+      );
     });
     asyncCases(builder, fetchPartnerActivities, (state, { payload }) => {
       state.activities = payload;

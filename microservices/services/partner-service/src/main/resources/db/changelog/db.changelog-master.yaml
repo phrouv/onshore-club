@@ -146,3 +146,88 @@ databaseChangeLog:
                   defaultValueComputed: CURRENT_TIMESTAMP
                   constraints:
                     nullable: false
+
+  - changeSet:
+      id: 003-create-clubs-table
+      author: onshore
+      preConditions:
+        - onFail: MARK_RAN
+          not:
+            - tableExists:
+                tableName: clubs
+      changes:
+        - createTable:
+            tableName: clubs
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_clubs
+                    nullable: false
+              - column:
+                  name: partner_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: club_street
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: club_city
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: club_zip_code
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: club_latitude
+                  type: NUMERIC(10,6)
+              - column:
+                  name: club_longitude
+                  type: NUMERIC(10,6)
+              - column:
+                  name: contact_first_name
+                  type: VARCHAR(100)
+              - column:
+                  name: contact_last_name
+                  type: VARCHAR(100)
+              - column:
+                  name: contact_email
+                  type: VARCHAR(500)
+              - column:
+                  name: contact_phone_number
+                  type: VARCHAR(100)
+              - column:
+                  name: open
+                  type: BOOLEAN
+                  defaultValueBoolean: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+        - addUniqueConstraint:
+            tableName: clubs
+            columnNames: partner_id, name
+            constraintName: uk_club_partner_name

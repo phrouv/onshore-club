@@ -1,6 +1,6 @@
 package com.onshore.services.controller;
 
-import com.onshore.common_lib.security.Roles;
+import com.onshore.common_lib.enums.UserRole;
 import com.onshore.services.payload.CategoryRequest;
 import com.onshore.services.payload.CategoryResponse;
 import com.onshore.services.service.CategoryService;
@@ -22,7 +22,7 @@ public class CategoryController {
   public ResponseEntity<CategoryResponse> create(
       @Valid @RequestBody CategoryRequest request,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.create(request));
   }
 
@@ -31,7 +31,7 @@ public class CategoryController {
       @PathVariable String code,
       @Valid @RequestBody CategoryRequest request,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return categoryService.update(code, request);
   }
 
@@ -40,7 +40,7 @@ public class CategoryController {
       @RequestParam(required = false) Boolean active,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
     // Only admins may list inactive categories.
-    boolean activeOnly = !Roles.isAdmin(roles) || Boolean.TRUE.equals(active);
+    boolean activeOnly = !UserRole.isAdmin(roles) || Boolean.TRUE.equals(active);
     return categoryService.list(activeOnly);
   }
 
@@ -54,7 +54,7 @@ public class CategoryController {
       @PathVariable String code,
       @RequestParam boolean active,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return categoryService.changeStatus(code, active);
   }
 }

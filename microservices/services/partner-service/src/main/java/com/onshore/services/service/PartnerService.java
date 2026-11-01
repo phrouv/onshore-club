@@ -13,7 +13,7 @@ public interface PartnerService {
 
   PartnerResponse get(UUID id);
 
-  PartnerResponse mine(UUID ownerUserId);
+  List<PartnerResponse> mine(UUID ownerUserId);
 
   List<PartnerResponse> list(PartnerStatus status, String city);
 

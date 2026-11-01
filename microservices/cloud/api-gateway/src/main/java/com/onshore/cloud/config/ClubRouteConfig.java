@@ -34,6 +34,15 @@ public class ClubRouteConfig {
   }
 
   @Bean
+  public RouterFunction<ServerResponse> clubServiceRoutes() {
+    return GatewayRouterFunctions.route("club-service-routes")
+        .route(RequestPredicates.path("/api/clubs/**"), HandlerFunctions.http())
+        .filter(LoadBalancerFilterFunctions.lb("partner-service"))
+        .before(auth::jwtAuthFilter)
+        .build();
+  }
+
+  @Bean
   public RouterFunction<ServerResponse> planningServiceRoutes() {
     return GatewayRouterFunctions.route("planning-service-routes")
         .route(RequestPredicates.path("/api/classes/**"), HandlerFunctions.http())

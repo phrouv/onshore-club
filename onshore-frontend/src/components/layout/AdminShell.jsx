@@ -3,6 +3,7 @@ import {
   CalendarDays,
   Coins,
   LayoutDashboard,
+  MapPin,
   Settings,
   Store,
   Tags,
@@ -13,6 +14,7 @@ import { Shell } from "./Shell";
 const LINKS = [
   { to: "/admin", label: "Tableau de bord", icon: LayoutDashboard, end: true },
   { to: "/admin/partners", label: "Partenaires", icon: Store },
+  { to: "/admin/clubs", label: "Clubs", icon: MapPin },
   { to: "/admin/members", label: "Membres", icon: Users },
   { to: "/admin/bookings", label: "Réservations", icon: CalendarDays },
   { to: "/admin/credits", label: "Crédits & formules", icon: Coins },

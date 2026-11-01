@@ -28,6 +28,7 @@ import AdminCredits from "./pages/admin/AdminCredits";
 import AdminPayouts from "./pages/admin/AdminPayouts";
 import AdminRules from "./pages/admin/AdminRules";
 import AdminCategories from "./pages/admin/AdminCategories";
+import AdminClubs from "./pages/admin/AdminClubs";
 
 function Home() {
   const user = useSelector((s) => s.auth.user);
@@ -78,6 +79,7 @@ export default function App() {
             <Route path="payouts" element={<AdminPayouts />} />
             <Route path="rules" element={<AdminRules />} />
             <Route path="categories" element={<AdminCategories />} />
+            <Route path="clubs" element={<AdminClubs />} />
           </Route>
         </Route>
 

@@ -25,10 +25,6 @@ public class PartnerServiceImpl implements PartnerService {
 
   @Override
   public PartnerResponse create(PartnerRequest request, UUID ownerUserId) {
-    if (partnerRepository.findByOwnerUserId(ownerUserId).isPresent()) {
-      throw new ApiException(
-          ClubExceptionType.PARTNER_ALREADY_EXISTS, "This user already owns a partner");
-    }
     Partner partner = PartnerMapper.toEntity(request);
     partner.setStatus(PartnerStatus.PENDING);
     partner.setOwnerUserId(ownerUserId);
@@ -43,14 +39,10 @@ public class PartnerServiceImpl implements PartnerService {
 
   @Override
   @Transactional(readOnly = true)
-  public PartnerResponse mine(UUID ownerUserId) {
-    return partnerRepository
-        .findByOwnerUserId(ownerUserId)
+  public List<PartnerResponse> mine(UUID ownerUserId) {
+    return partnerRepository.findByOwnerUserId(ownerUserId).stream()
         .map(PartnerMapper::toResponse)
-        .orElseThrow(
-            () ->
-                new ApiException(
-                    ClubExceptionType.PARTNER_NOT_FOUND, "No partner for user " + ownerUserId));
+        .toList();
   }
 
   @Override

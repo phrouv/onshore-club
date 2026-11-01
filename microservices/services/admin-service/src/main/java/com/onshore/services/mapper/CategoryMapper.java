@@ -1,5 +1,6 @@
 package com.onshore.services.mapper;
 
+import com.onshore.common_lib.club.CategoryInfo;
 import com.onshore.services.model.Category;
 import com.onshore.services.payload.CategoryRequest;
 import com.onshore.services.payload.CategoryResponse;
@@ -30,6 +31,11 @@ public class CategoryMapper {
 
   public static CategoryResponse toResponse(Category e) {
     return new CategoryResponse(
+        e.getId(), e.getCode(), e.getName(), e.getDescription(), e.getImage(), e.isActive());
+  }
+
+  public static CategoryInfo toInfo(Category e) {
+    return new CategoryInfo(
         e.getId(), e.getCode(), e.getName(), e.getDescription(), e.getImage(), e.isActive());
   }
 

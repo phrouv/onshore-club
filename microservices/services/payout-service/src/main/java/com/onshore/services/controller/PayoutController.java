@@ -3,7 +3,7 @@ package com.onshore.services.controller;
 import com.onshore.common_lib.club.PayoutCreateRequest;
 import com.onshore.common_lib.club.PayoutStats;
 import com.onshore.common_lib.enums.PayoutStatus;
-import com.onshore.common_lib.security.Roles;
+import com.onshore.common_lib.enums.UserRole;
 import com.onshore.services.payload.PartnerPayoutResponse;
 import com.onshore.services.payload.PayoutSummary;
 import com.onshore.services.service.PayoutService;
@@ -38,7 +38,7 @@ public class PayoutController {
   @GetMapping("/api/payouts/summary")
   public List<PayoutSummary> summary(
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return payoutService.byPartner();
   }
 
@@ -47,7 +47,7 @@ public class PayoutController {
       @PathVariable UUID id,
       @RequestParam PayoutStatus status,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return payoutService.changeStatus(id, status);
   }
 

@@ -1,8 +1,10 @@
 package com.onshore.services.controller;
 
 import com.onshore.common_lib.club.ActivityInfo;
+import com.onshore.common_lib.club.ClubInfo;
 import com.onshore.common_lib.club.PartnerInfo;
 import com.onshore.services.service.ActivityService;
+import com.onshore.services.service.ClubService;
 import com.onshore.services.service.PartnerService;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,7 @@ public class InternalController {
 
   private final PartnerService partnerService;
   private final ActivityService activityService;
+  private final ClubService clubService;
 
   @GetMapping("/partners/{id}")
   public PartnerInfo partner(@PathVariable UUID id) {
@@ -25,5 +28,10 @@ public class InternalController {
   @GetMapping("/activities/{id}")
   public ActivityInfo activity(@PathVariable UUID id) {
     return activityService.info(id);
+  }
+
+  @GetMapping("/clubs/{id}")
+  public ClubInfo club(@PathVariable UUID id) {
+    return clubService.info(id);
   }
 }

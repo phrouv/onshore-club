@@ -1,7 +1,7 @@
 package com.onshore.services.controller;
 
 import com.onshore.common_lib.enums.CreditTransactionType;
-import com.onshore.common_lib.security.Roles;
+import com.onshore.common_lib.enums.UserRole;
 import com.onshore.services.payload.*;
 import com.onshore.services.service.CatalogService;
 import com.onshore.services.service.CreditService;
@@ -33,7 +33,7 @@ public class CreditController {
       @RequestParam(required = false) UUID memberId,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
     // Admins can read any member's ledger.
-    UUID target = memberId != null && Roles.isAdmin(roles) ? memberId : userId;
+    UUID target = memberId != null && UserRole.isAdmin(roles) ? memberId : userId;
     return creditService.transactions(target);
   }
 
@@ -47,7 +47,7 @@ public class CreditController {
   public BalanceResponse adjust(
       @Valid @RequestBody AdjustRequest request,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     CreditTransactionType type =
         request.type() == CreditTransactionType.PROMOTIONAL_CREDIT
             ? CreditTransactionType.PROMOTIONAL_CREDIT
@@ -79,14 +79,14 @@ public class CreditController {
   @GetMapping("/api/plans")
   public List<PlanDto> plans(
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    return catalogService.plans(Roles.isAdmin(roles));
+    return catalogService.plans(UserRole.isAdmin(roles));
   }
 
   @PutMapping("/api/plans")
   public PlanDto savePlan(
       @Valid @RequestBody PlanDto plan,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return catalogService.savePlan(plan);
   }
 
@@ -94,7 +94,7 @@ public class CreditController {
   public List<CreditSettingDto> settings(
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
     // The grid is internal pricing: admin only.
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return catalogService.settings();
   }
 
@@ -103,7 +103,7 @@ public class CreditController {
       @PathVariable String category,
       @Valid @RequestBody CreditSettingDto setting,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return catalogService.saveSetting(category, setting);
   }
 }

@@ -1,6 +1,6 @@
 package com.onshore.services.controller;
 
-import com.onshore.common_lib.security.Roles;
+import com.onshore.common_lib.enums.UserRole;
 import com.onshore.services.payload.ActivityRequest;
 import com.onshore.services.payload.ActivityResponse;
 import com.onshore.services.service.ActivityService;
@@ -41,7 +41,7 @@ public class ActivityController {
       @RequestHeader("X-User-Id") UUID userId,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
     return ResponseEntity.status(HttpStatus.CREATED)
-        .body(activityService.create(request, userId, Roles.isAdmin(roles), showPayout(roles)));
+        .body(activityService.create(request, userId, UserRole.isAdmin(roles), showPayout(roles)));
   }
 
   @PutMapping("/{id}")
@@ -50,10 +50,10 @@ public class ActivityController {
       @Valid @RequestBody ActivityRequest request,
       @RequestHeader("X-User-Id") UUID userId,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    return activityService.update(id, request, userId, Roles.isAdmin(roles), showPayout(roles));
+    return activityService.update(id, request, userId, UserRole.isAdmin(roles), showPayout(roles));
   }
 
   private static boolean showPayout(String roles) {
-    return Roles.isAdmin(roles) || Roles.has(roles, Roles.PARTNER);
+    return UserRole.isAdmin(roles) || UserRole.has(roles, UserRole.ROLE_PARTNER.name());
   }
 }

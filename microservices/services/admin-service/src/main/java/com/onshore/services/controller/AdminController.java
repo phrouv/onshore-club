@@ -2,7 +2,7 @@ package com.onshore.services.controller;
 
 import com.onshore.common_lib.club.AppSettingsInfo;
 import com.onshore.common_lib.club.UsageRuleInfo;
-import com.onshore.common_lib.security.Roles;
+import com.onshore.common_lib.enums.UserRole;
 import com.onshore.services.payload.DashboardResponse;
 import com.onshore.services.payload.SettingsRequest;
 import com.onshore.services.payload.UsageRuleRequest;
@@ -25,14 +25,14 @@ public class AdminController {
   @GetMapping("/api/admin/dashboard")
   public DashboardResponse dashboard(
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return adminService.dashboard();
   }
 
   @GetMapping("/api/admin/usage-rules")
   public List<UsageRuleResponse> rules(
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return adminService.rules();
   }
 
@@ -40,7 +40,7 @@ public class AdminController {
   public ResponseEntity<UsageRuleResponse> createRule(
       @Valid @RequestBody UsageRuleRequest request,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return ResponseEntity.status(HttpStatus.CREATED).body(adminService.createRule(request));
   }
 
@@ -49,7 +49,7 @@ public class AdminController {
       @PathVariable UUID id,
       @Valid @RequestBody UsageRuleRequest request,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return adminService.updateRule(id, request);
   }
 
@@ -57,7 +57,7 @@ public class AdminController {
   public ResponseEntity<Void> deleteRule(
       @PathVariable UUID id,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     adminService.deleteRule(id);
     return ResponseEntity.noContent().build();
   }
@@ -65,7 +65,7 @@ public class AdminController {
   @GetMapping("/api/admin/settings")
   public AppSettingsInfo settings(
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return adminService.settings();
   }
 
@@ -73,7 +73,7 @@ public class AdminController {
   public AppSettingsInfo updateSettings(
       @Valid @RequestBody SettingsRequest request,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    Roles.requireAdmin(roles);
+    UserRole.requireAdmin(roles);
     return adminService.updateSettings(request);
   }
 

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { adminService } from "../../services/adminService";
+import { clubService } from "../../services/clubService";
 import { creditService } from "../../services/creditService";
 import { partnerService } from "../../services/partnerService";
 import { payoutService } from "../../services/payoutService";
@@ -21,6 +22,20 @@ export const fetchAllPartners = createAsyncThunk(
 export const fetchAllActivities = createAsyncThunk(
   "admin/activities",
   guarded(() => partnerService.listActivities({})),
+);
+export const fetchClubs = createAsyncThunk(
+  "admin/clubs",
+  guarded(() => clubService.listClubs({})),
+);
+export const saveClub = createAsyncThunk(
+  "admin/saveClub",
+  guarded(({ id, body }) =>
+    id ? clubService.updateClub(id, body) : clubService.createClub(body),
+  ),
+);
+export const setClubOpen = createAsyncThunk(
+  "admin/clubOpen",
+  guarded(({ id, open }) => clubService.setClubOpen(id, open)),
 );
 export const setPartnerStatus = createAsyncThunk(
   "admin/partnerStatus",
@@ -126,6 +141,7 @@ const adminSlice = createSlice({
     users: [],
     partners: [],
     activities: [],
+    clubs: [],
     rules: [],
     settings: null,
     categories: [],
@@ -149,6 +165,15 @@ const adminSlice = createSlice({
     });
     asyncCases(builder, fetchAllActivities, (state, { payload }) => {
       state.activities = payload;
+    });
+    asyncCases(builder, fetchClubs, (state, { payload }) => {
+      state.clubs = payload;
+    });
+    asyncCases(builder, saveClub, (state, { payload }) => {
+      state.clubs = upsert(state.clubs, payload);
+    });
+    asyncCases(builder, setClubOpen, (state, { payload }) => {
+      state.clubs = upsert(state.clubs, payload);
     });
     asyncCases(builder, setPartnerStatus, (state, { payload }) => {
       state.partners = upsert(state.partners, payload);

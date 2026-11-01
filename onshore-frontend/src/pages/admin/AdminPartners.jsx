@@ -250,7 +250,7 @@ export default function AdminPartners() {
                   >
                     <td className="px-3 py-4 font-medium">{p.name}</td>
                     <td className="px-3 py-4 text-muted-foreground">
-                      {p.street}, {p.city}
+                      {p.street}, {p.zipCode} {p.city}
                     </td>
                     <td className="px-3 py-4 text-muted-foreground">
                       {p.website || "—"}

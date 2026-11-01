@@ -5,9 +5,9 @@ import com.onshore.common_lib.club.ClassInfo;
 import com.onshore.common_lib.club.PartnerInfo;
 import com.onshore.common_lib.enums.ClassStatus;
 import com.onshore.common_lib.enums.DemandLevel;
+import com.onshore.common_lib.enums.UserRole;
 import com.onshore.common_lib.exception.ApiException;
 import com.onshore.common_lib.exception.ClubExceptionType;
-import com.onshore.common_lib.security.Roles;
 import com.onshore.services.client.BookingClient;
 import com.onshore.services.client.CreditClient;
 import com.onshore.services.client.PartnerClient;
@@ -117,7 +117,7 @@ public class ClassServiceImpl implements ClassService {
     session.setEndTime(request.endTime());
     session.setCapacity(request.capacity());
     session.setOnePassCapacity(request.onePassCapacity());
-    if (Roles.isAdmin(roles)
+    if (UserRole.isAdmin(roles)
         && request.demandLevel() != null
         && request.demandLevel() != session.getDemandLevel()) {
       session.setDemandLevel(request.demandLevel());
@@ -195,7 +195,7 @@ public class ClassServiceImpl implements ClassService {
 
   /** Partners can only manage classes of their own venue; admins can manage all. */
   private void authorize(UUID partnerId, UUID userId, String roles) {
-    if (Roles.isAdmin(roles)) return;
+    if (UserRole.isAdmin(roles)) return;
     PartnerInfo partner = partnerClient.partner(partnerId);
     if (!partner.ownerUserId().equals(userId)) {
       throw new ApiException(
@@ -204,7 +204,9 @@ public class ClassServiceImpl implements ClassService {
   }
 
   private static DemandLevel demandFor(ClassRequest request, String roles, DemandLevel fallback) {
-    return Roles.isAdmin(roles) && request.demandLevel() != null ? request.demandLevel() : fallback;
+    return UserRole.isAdmin(roles) && request.demandLevel() != null
+        ? request.demandLevel()
+        : fallback;
   }
 
   /** The activity's own price wins; otherwise the admin-managed grid by category and demand. */
@@ -222,8 +224,8 @@ public class ClassServiceImpl implements ClassService {
     if (sessions.isEmpty()) return List.of();
     Map<UUID, Long> counts =
         bookingClient.counts(sessions.stream().map(ClassSession::getId).toList());
-    boolean admin = Roles.isAdmin(roles);
-    boolean partner = Roles.has(roles, Roles.PARTNER);
+    boolean admin = UserRole.isAdmin(roles);
+    boolean partner = UserRole.has(roles, UserRole.ROLE_PARTNER.name());
     return sessions.stream()
         .map(
             c ->

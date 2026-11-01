@@ -15,7 +15,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.onshore.common_lib.security.Roles;
+import com.onshore.common_lib.enums.UserRole;
 import com.onshore.services.repository.CategoryRepository;
 import com.onshore.services.service.ImageStorageService;
 import java.util.Base64;
@@ -45,8 +45,6 @@ class CategoryIntegrationTest {
   @Container @ServiceConnection
   static PostgreSQLContainer postgres = new PostgreSQLContainer("postgres:16-alpine");
 
-  private static final String ADMIN = Roles.ADMIN;
-  private static final String MEMBER = Roles.MEMBER;
   private static final String IMAGE_BASE_URL = "http://localhost:9000/onshorebucket/";
   private static final String PNG =
       dataUrl("image/png", new byte[] {(byte) 0x89, 'P', 'N', 'G', 0x0D, 0x0A, 0x1A, 0x0A, 0});
@@ -86,7 +84,8 @@ class CategoryIntegrationTest {
   private void createYoga() throws Exception {
     mockMvc
         .perform(
-            as(ADMIN, post("/api/categories")).content(body("YOGA", "Yoga", "Yoga classes", PNG)))
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), post("/api/categories"))
+                .content(body("YOGA", "Yoga", "Yoga classes", PNG)))
         .andExpect(status().isCreated());
   }
 
@@ -95,13 +94,14 @@ class CategoryIntegrationTest {
   void adminCreatesCategory() throws Exception {
     mockMvc
         .perform(
-            as(ADMIN, post("/api/categories")).content(body("yoga", "Yoga", "Yoga classes", PNG)))
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), post("/api/categories"))
+                .content(body("yoga", "Yoga", "Yoga classes", PNG)))
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.code").value("YOGA"))
         .andExpect(jsonPath("$.active").value(true));
 
     mockMvc
-        .perform(as(MEMBER, get("/api/categories")).param("active", "true"))
+        .perform(as(UserRole.ROLE_MEMBER.name(), get("/api/categories")).param("active", "true"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$[0].code").value("YOGA"));
   }
@@ -121,7 +121,9 @@ class CategoryIntegrationTest {
     createYoga();
 
     mockMvc
-        .perform(as(ADMIN, post("/api/categories")).content(body(" yoga ", "Other", null, PNG)))
+        .perform(
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), post("/api/categories"))
+                .content(body(" yoga ", "Other", null, PNG)))
         .andExpect(status().isConflict());
   }
 
@@ -132,7 +134,7 @@ class CategoryIntegrationTest {
 
     mockMvc
         .perform(
-            as(ADMIN, put("/api/categories/YOGA"))
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), put("/api/categories/YOGA"))
                 .content(body("YOGA", "Hot Yoga", "Heated classes", storedImage())))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value("YOGA"))
@@ -148,7 +150,7 @@ class CategoryIntegrationTest {
 
     mockMvc
         .perform(
-            as(ADMIN, put("/api/categories/YOGA"))
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), put("/api/categories/YOGA"))
                 .content(body("YOGA", "Yoga", "Yoga classes", JPEG)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.code").value("YOGA"));
@@ -165,7 +167,7 @@ class CategoryIntegrationTest {
 
     mockMvc
         .perform(
-            as(ADMIN, put("/api/categories/YOGA"))
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), put("/api/categories/YOGA"))
                 .content(body("YOGA", "Yoga", "Yoga classes", previous)))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.image").value(previous));
@@ -181,7 +183,7 @@ class CategoryIntegrationTest {
 
     mockMvc
         .perform(
-            as(ADMIN, put("/api/categories/YOGA"))
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), put("/api/categories/YOGA"))
                 .content(body("YOGA", "Yoga", null, storedImage())))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.description").value("Yoga classes"));
@@ -195,7 +197,7 @@ class CategoryIntegrationTest {
 
     mockMvc
         .perform(
-            as(MEMBER, put("/api/categories/YOGA"))
+            as(UserRole.ROLE_MEMBER.name(), put("/api/categories/YOGA"))
                 .content(body("YOGA", "Yoga", "Yoga classes", JPEG)))
         .andExpect(status().isForbidden());
 
@@ -209,7 +211,7 @@ class CategoryIntegrationTest {
 
     mockMvc
         .perform(
-            as(ADMIN, put("/api/categories/YOGA"))
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), put("/api/categories/YOGA"))
                 .content(body("PILATES", "Yoga", "Yoga classes", storedImage())))
         .andExpect(status().isBadRequest());
 
@@ -221,7 +223,9 @@ class CategoryIntegrationTest {
   @DisplayName("AC5: non-admin create is rejected with 403")
   void nonAdminCreateIsForbidden() throws Exception {
     mockMvc
-        .perform(as(MEMBER, post("/api/categories")).content(body("YOGA", "Yoga", null, PNG)))
+        .perform(
+            as(UserRole.ROLE_MEMBER.name(), post("/api/categories"))
+                .content(body("YOGA", "Yoga", null, PNG)))
         .andExpect(status().isForbidden());
 
     assertThat(categoryRepository.count()).isZero();
@@ -233,7 +237,9 @@ class CategoryIntegrationTest {
     String text = dataUrl("text/plain", "hello".getBytes());
 
     mockMvc
-        .perform(as(ADMIN, post("/api/categories")).content(body("YOGA", "Yoga", null, text)))
+        .perform(
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), post("/api/categories"))
+                .content(body("YOGA", "Yoga", null, text)))
         .andExpect(status().isBadRequest());
 
     assertThat(categoryRepository.count()).isZero();
@@ -250,7 +256,7 @@ class CategoryIntegrationTest {
 
     mockMvc
         .perform(
-            as(ADMIN, post("/api/categories"))
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), post("/api/categories"))
                 .content(body("YOGA", "Yoga", null, dataUrl("image/jpeg", big))))
         .andExpect(status().isBadRequest());
 
@@ -264,7 +270,7 @@ class CategoryIntegrationTest {
 
     mockMvc
         .perform(
-            as(ADMIN, put("/api/categories/YOGA"))
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), put("/api/categories/YOGA"))
                 .content(body("YOGA", "Yoga", "Yoga classes", "http://evil.example/x.png")))
         .andExpect(status().isBadRequest());
   }
@@ -273,7 +279,9 @@ class CategoryIntegrationTest {
   @DisplayName("Create without an image is rejected with 400")
   void missingImageIsRejected() throws Exception {
     mockMvc
-        .perform(as(ADMIN, post("/api/categories")).content(body("YOGA", "Yoga", null, "")))
+        .perform(
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), post("/api/categories"))
+                .content(body("YOGA", "Yoga", null, "")))
         .andExpect(status().isBadRequest());
   }
 
@@ -283,22 +291,26 @@ class CategoryIntegrationTest {
     createYoga();
 
     mockMvc
-        .perform(as(ADMIN, patch("/api/categories/YOGA/status")).param("active", "false"))
+        .perform(
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), patch("/api/categories/YOGA/status"))
+                .param("active", "false"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.active").value(false));
     assertThat(categoryRepository.findByCode("YOGA").orElseThrow().isActive()).isFalse();
 
     mockMvc
-        .perform(as(MEMBER, get("/api/categories")))
+        .perform(as(UserRole.ROLE_MEMBER.name(), get("/api/categories")))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(0));
     mockMvc
-        .perform(as(ADMIN, get("/api/categories")))
+        .perform(as(UserRole.ROLE_SYSTEM_ADMIN.name(), get("/api/categories")))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.length()").value(1));
 
     mockMvc
-        .perform(as(ADMIN, patch("/api/categories/YOGA/status")).param("active", "true"))
+        .perform(
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), patch("/api/categories/YOGA/status"))
+                .param("active", "true"))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.active").value(true));
   }
@@ -309,7 +321,9 @@ class CategoryIntegrationTest {
     createYoga();
 
     mockMvc
-        .perform(as(MEMBER, patch("/api/categories/YOGA/status")).param("active", "false"))
+        .perform(
+            as(UserRole.ROLE_MEMBER.name(), patch("/api/categories/YOGA/status"))
+                .param("active", "false"))
         .andExpect(status().isForbidden());
 
     assertThat(categoryRepository.findByCode("YOGA").orElseThrow().isActive()).isTrue();
@@ -319,7 +333,9 @@ class CategoryIntegrationTest {
   @DisplayName("Status change on an unknown category returns 404")
   void statusChangeOnUnknownCategoryIsNotFound() throws Exception {
     mockMvc
-        .perform(as(ADMIN, patch("/api/categories/NOPE/status")).param("active", "false"))
+        .perform(
+            as(UserRole.ROLE_SYSTEM_ADMIN.name(), patch("/api/categories/NOPE/status"))
+                .param("active", "false"))
         .andExpect(status().isNotFound());
   }
 }

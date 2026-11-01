@@ -1,0 +1,12 @@
+spring:
+  config:
+    import: ""
+  cloud:
+    config:
+      enabled: false
+  liquibase:
+    enabled: true
+
+eureka:
+  client:
+    enabled: false
