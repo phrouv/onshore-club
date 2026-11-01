@@ -26,18 +26,23 @@ databaseChangeLog:
                     unique: true
                     uniqueConstraintName: uk_partner_name
               - column:
-                  name: address
-                  type: VARCHAR(500)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: city
-                  type: VARCHAR(500)
-                  constraints:
-                    nullable: false
-              - column:
                   name: description
                   type: TEXT
+              - column:
+                  name: partner_street
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: partner_city
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: partner_zip_code
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
               - column:
                   name: status
                   type: VARCHAR(20)
@@ -45,28 +50,22 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: phone
-                  type: VARCHAR(100)
-              - column:
-                  name: professional_email
-                  type: VARCHAR(500)
-              - column:
                   name: website
                   type: VARCHAR(500)
               - column:
                   name: instagram
                   type: VARCHAR(500)
               - column:
-                  name: activity_types
-                  type: TEXT
-              - column:
-                  name: desired_seats
-                  type: VARCHAR(255)
-              - column:
                   name: manager_first_name
                   type: VARCHAR(100)
               - column:
                   name: manager_last_name
+                  type: VARCHAR(100)
+              - column:
+                  name: manager_email
+                  type: VARCHAR(500)
+              - column:
+                  name: manager_phone_number
                   type: VARCHAR(100)
               - column:
                   name: owner_user_id

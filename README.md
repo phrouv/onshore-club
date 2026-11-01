@@ -7,7 +7,7 @@ Sports-club platform (One Pass): members book partner classes with credits, part
 | `microservices/` | Spring Boot / Spring Cloud backend — see [microservices/README.md](microservices/README.md) |
 | `onshore-frontend/` | React frontend (member, partner, admin spaces) |
 | `config-repo/` | Config Server files: port and datasource per service |
-| `documentation`, `ai/` | Specs and AI-assistant material |
+| `documentation`, `.github/` | Specs and AI-assistant material |
 | `docker-compose.yml` | Full stack: Postgres per service, Redis, Kafka, Eureka, Config Server, gateway, services |
 | `docker-compose.dev.yml` | Redis + Kafka only, ports exposed for services running on the host |
 | `init-databases.sql` | Creates one Postgres database per service |

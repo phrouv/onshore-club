@@ -502,8 +502,8 @@ If restructuring existing tests:
 
 ## Related Documentation to keep up-to-date
 
-- **BDD Guidelines:** `ai/rules/e2e/bdd.instructions.md`
-- **E2E Test Execution:** `ai/rules/e2e/e2e.instructions.md`
-- **E2E Utilities:** `ai/rules/e2e/e2e-utils.instructions.md`
+- **BDD Guidelines:** `.github/instructions/e2e/bdd.instructions.md`
+- **E2E Test Execution:** `.github/instructions/e2e/e2e.instructions.md`
+- **E2E Utilities:** `.github/instructions/e2e/e2e-utils.instructions.md`
 - **Utilities Documentation:** `documentation/e2e/README.md`
 - **Feature Utilities Guide:** `e2e/utils/FEATURES_GUIDE.md`

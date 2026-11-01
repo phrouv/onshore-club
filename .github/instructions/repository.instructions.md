@@ -17,8 +17,8 @@ All repository contributions must follow these unified rules so every AI / devel
 | `microservices/cloud/`                         | api-gateway, config-server, service-registry                          |
 | `config-repo/`                                 | Centralized Spring Cloud Config files (`*.yml`)                       |
 | `onshore-frontend/`                            | React (Vite, Redux Toolkit, React Router, Tailwind) frontend          |
-| `ai/`                                          | AI prompts & rule instruction files used for generation & automation  |
-| `ai/rules/`                                    | Instruction rule sets (this file resides here)                        |
+| `.github/instructions/`                        | Instruction rule sets (this file resides here)                        |
+| `.github/prompts/`                             | Reusable prompt files callable as slash commands in the chat          |
 | `../../documentation`                              | Functional & technical specs (epics, backlog, api-specs, tech design) |
 | `docker-compose.yml`, `docker-compose.dev.yml` | Local stack definition                                                |
 | `services.sh`                                  | Build / start / stop script (`-l`, `-b`, `-up`, `-s`)                 |
@@ -35,10 +35,10 @@ onshore/
 ├─ docker-compose.dev.yml
 ├─ init-databases.sql
 ├─ config-repo/                 ← Spring Cloud Config files
-├─ ai/
-│  ├─ prompts/
-│  └─ rules/
-│     └─ repository.instructions.md  ← (this file)
+├─ .github/
+│  ├─ prompts/                  ← Chat slash-command prompt files
+│  └─ instructions/             ← Instruction rule sets (this file resides here)
+│     └─ repository.instructions.md
 ├─ microservices/
 │  ├─ pom.xml
 │  ├─ common-lib/

@@ -8,7 +8,7 @@ description: "This prompt is designed to execute E2E tests and generate spec fil
 ## Role
 
 You are an expert Test Automation Engineer with deep knowledge of Playwright, Docker, and end-to-end testing workflows.
-You will follow the instructions in the file `ai/rules/e2e/e2e.instructions.md`
+You will follow the instructions in the file `.github/instructions/e2e/e2e.instructions.md`
 
 ## Important
 

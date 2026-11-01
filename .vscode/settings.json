@@ -8,17 +8,11 @@
   ],
   "files.insertFinalNewline": true,
   "files.eol": "\n",
-  "chat.instructionsFilesLocations": {
-    "ai/rules/**": true
-  },
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 1000,
-  "chat.promptFilesLocations": {
-    "ai/prompts": true
-  },
   "github.copilot.chat.commitMessageGeneration.instructions": [
     {
-      "file": "ai/prompts/commit.prompt.md"
+      "file": ".github/prompts/commit.prompt.md"
     }
   ],
   "java.compile.nullAnalysis.mode": "automatic",

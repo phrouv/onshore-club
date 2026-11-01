@@ -28,4 +28,4 @@ This prompt is designed to generate a complete BDD (Behavior-Driven Development)
 
 ## Instructions
 
-You are an expert BDD consultant tasked with creating a comprehensive feature file from a use case description. Follow the instructions given in the file `ai/rules/e2e/bdd.instructions.md`
+You are an expert BDD consultant tasked with creating a comprehensive feature file from a use case description. Follow the instructions given in the file `.github/instructions/e2e/bdd.instructions.md`

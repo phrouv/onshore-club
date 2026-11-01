@@ -12,20 +12,20 @@
 
 ### 1.1 Purpose
 
-Define the requirements for the **partner** entity (a venue or studio offering activities to club members): signup, approval workflow, profile management and browsing.
+Define the requirements for the **partner** entity (a venue or studio offering activities to club members), managed exclusively by operators with admin roles: creation, approval workflow, profile management, status workflow and browsing.
 
 ### 1.2 Background / current situation
 
 - `partner-service` owns the `Partner` entity (table `partners`):
-  - Required: `name`, `address`, `city`, `ownerUserId`.
-  - Optional: `description`, `phone`, `professionalEmail`, `website`, `instagram`, `activityTypes`, `desiredSeats` (string), `managerFirstName`, `managerLastName`.
+  - Required: `name`, `ownerUserId`, and the address fields `street`, `city`, `zipCode` (embedded `Address`).
+  - Optional: `description`, `website`, `instagram`, and the manager contact fields `managerFirstName`, `managerLastName`, `managerEmail`, `managerPhoneNumber` (embedded `ContactPerson`).
   - System-managed: `id` (UUID), `status` (default `PENDING`), `createdAt`.
 - `PartnerStatus` (common-lib): `PENDING`, `ACTIVE`, `SUSPENDED`, `REJECTED`.
-- Endpoints: `POST /api/partners`, `GET /api/partners` (`status`, `city`), `GET /api/partners/mine`, `GET /api/partners/{id}`, `PUT /api/partners/{id}`, `PATCH /api/partners/{id}/status`, and `GET /internal/partners/{id}` (returns `PartnerInfo`: id, name, ownerUserId, status).
+- Endpoints: `POST /api/partners`, `GET /api/partners` (`status`, `city`), `GET /api/partners/{id}`, `PUT /api/partners/{id}`, `PATCH /api/partners/{id}/status`, and `GET /internal/partners/{id}` (returns `PartnerInfo`: id, name, ownerUserId, status).
 - Known gaps:
   - Any status can be set from any status.
   - Listing filters in memory after `findAll()`.
-  - Email is not validated; `desiredSeats` is a string.
+  - The manager email is not validated.
   - The partner has no category: categories belong to activities (see EP001).
   - `GET /api/partners/{id}` is not restricted by status.
 
@@ -39,8 +39,8 @@ Define the requirements for the **partner** entity (a venue or studio offering a
 
 **In scope**
 
-- Partner signup, profile update and status workflow.
-- Partner listing, filtering and detail.
+- Partner creation, profile update and status workflow (admin-only).
+- Partner listing, filtering and detail (admin-only).
 - Internal partner lookup for other services.
 
 **Out of scope**
@@ -54,18 +54,18 @@ Define the requirements for the **partner** entity (a venue or studio offering a
 | Term           | Meaning                                                        |
 | -------------- | -------------------------------------------------------------- |
 | Partner        | A venue or studio that offers activities on the platform       |
-| Owner          | The user who signed up the partner (`ownerUserId`)             |
+| Owner          | The user who owns the partner (`ownerUserId`)                  |
 | Partner status | `PENDING` (awaiting review), `ACTIVE`, `SUSPENDED`, `REJECTED` |
 | PartnerInfo    | Minimal internal view of a partner used by other services      |
 
 ## 2. Stakeholders and users
 
-| Role           | Interest                              | Permissions                                      |
-| -------------- | ------------------------------------- | ------------------------------------------------ |
-| Admin          | Reviews and moderates partners        | Read all, edit any partner, change status        |
-| Partner owner  | Gets listed and keeps profile current | Sign up, read own partner, edit own profile      |
-| Member         | Discovers partners                    | Read and filter `ACTIVE` partners                |
-| Other services | Resolve partner identity and status   | Internal read access (`/internal/partners/{id}`) |
+| Role           | Interest                              | Permissions                                                                                      |
+| -------------- | ------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| Admin          | Reviews and moderates partners        | Full read and management of partners (create, read, update, status); partner APIs are admin-only |
+| Partner owner  | Gets listed and keeps profile current | No direct partner API access; receives status notifications                                      |
+| Member         | Discovers partners                    | No direct partner API access                                                                     |
+| Other services | Resolve partner identity and status   | Internal read access (`/internal/partners/{id}`)                                                 |
 
 ## 3. Assumptions, dependencies, constraints
 
@@ -78,17 +78,17 @@ Define the requirements for the **partner** entity (a venue or studio offering a
 
 | ID    | Requirement                                                                                                            | Priority |
 | ----- | ---------------------------------------------------------------------------------------------------------------------- | -------- |
-| FR-01 | An authenticated user can sign up one partner; it is created as `PENDING` and the caller becomes its owner.            | Must     |
-| FR-02 | A user who already owns a partner cannot sign up another (409 `PARTNER_ALREADY_EXISTS`).                               | Must     |
-| FR-03 | `name`, `address` and `city` are mandatory; all other profile fields are optional.                                     | Must     |
-| FR-04 | The owner or an admin can update the partner profile; anyone else is rejected (403 `FORBIDDEN_OPERATION`).             | Must     |
+| FR-01 | An operator with an admin role can create a partner; it is created as `PENDING`.                                       | Must     |
+| FR-02 | A partner cannot be created with an `ownerUserId` that already owns another partner (409 `PARTNER_ALREADY_EXISTS`).    | Must     |
+| FR-03 | `name` and the address fields (`street`, `city`, `zipCode`) are mandatory; all other profile fields are optional.      | Must     |
+| FR-04 | Only an operator with an admin role can update the partner profile.                                                    | Must     |
 | FR-05 | Only an admin can change a partner's status.                                                                           | Must     |
-| FR-06 | Non-admins see only `ACTIVE` partners in listings; admins can filter by any status.                                    | Must     |
+| FR-06 | Only operators with admin roles can list partners and filter by any status.                                            | Must     |
 | FR-07 | Listings filter by `city`, case-insensitively.                                                                         | Must     |
-| FR-08 | An owner can fetch their own partner through `/mine` whatever its status (404 `PARTNER_NOT_FOUND` if none).            | Must     |
+| FR-08 | An operator with an admin role can fetch any partner by id (404 `PARTNER_NOT_FOUND` if none).                          | Must     |
 | FR-09 | A partner that is not `ACTIVE` cannot create activities or receive bookings (409 `PARTNER_NOT_ACTIVE`).                | Must     |
 | FR-10 | Status transitions are restricted: `PENDING` → `ACTIVE` or `REJECTED`; `ACTIVE` ⇄ `SUSPENDED`; `REJECTED` is terminal. | Should   |
-| FR-11 | `professionalEmail`, when provided, is well formed.                                                                    | Should   |
+| FR-11 | `managerEmail`, when provided, is well formed.                                                                         | Should   |
 | FR-12 | The partner has no category; the category of an activity references an active code from the EP001 catalog.             | Must     |
 | FR-13 | Listing is filtered and paginated in the database instead of in memory.                                                | Could    |
 | FR-14 | The owner is notified when the partner's status changes.                                                               | Could    |
@@ -105,7 +105,7 @@ Define the requirements for the **partner** entity (a venue or studio offering a
 
 | ID     | Category      | Requirement                                                                             |
 | ------ | ------------- | --------------------------------------------------------------------------------------- |
-| NFR-01 | Security      | Ownership and admin checks are enforced server-side, not only in the UI.                |
+| NFR-01 | Security      | Admin-only access is enforced server-side, not only in the UI.                          |
 | NFR-02 | Performance   | Partner list responds in under 200 ms at p95.                                           |
 | NFR-03 | Privacy       | Contact and manager details are not written to logs.                                    |
 | NFR-04 | Auditability  | Creation, update and status changes record who and when.                                |
@@ -114,36 +114,35 @@ Define the requirements for the **partner** entity (a venue or studio offering a
 
 ## 7. Interfaces
 
-| Method | Endpoint                    | Access                | Description                           |
-| ------ | --------------------------- | --------------------- | ------------------------------------- |
-| POST   | `/api/partners`             | Authenticated         | Sign up a partner (created `PENDING`) |
-| GET    | `/api/partners`             | Authenticated         | List partners (`status`, `city`)      |
-| GET    | `/api/partners/mine`        | Authenticated         | Partner owned by the caller           |
-| GET    | `/api/partners/{id}`        | Authenticated         | Partner detail                        |
-| PUT    | `/api/partners/{id}`        | Owner or admin        | Update profile                        |
-| PATCH  | `/api/partners/{id}/status` | Admin                 | Change status (`?status=`)            |
-| GET    | `/internal/partners/{id}`   | Internal (not routed) | `PartnerInfo` for other services      |
+| Method | Endpoint                    | Access                | Description                          |
+| ------ | --------------------------- | --------------------- | ------------------------------------ |
+| POST   | `/api/partners`             | Admin                 | Create a partner (created `PENDING`) |
+| GET    | `/api/partners`             | Admin                 | List partners (`status`, `city`)     |
+| GET    | `/api/partners/{id}`        | Admin                 | Partner detail                       |
+| PUT    | `/api/partners/{id}`        | Admin                 | Update profile                       |
+| PATCH  | `/api/partners/{id}/status` | Admin                 | Change status (`?status=`)           |
+| GET    | `/internal/partners/{id}`   | Internal (not routed) | `PartnerInfo` for other services     |
 
 **Partner payload**
 
 ```json
 {
+  "ownerUserId": "<user-id>",
   "name": "Zen Studio",
-  "address": "12 rue de la Paix",
+  "street": "12 rue de la Paix",
   "city": "Paris",
+  "zipCode": "75002",
   "description": "Yoga and pilates studio",
-  "phone": "+33100000000",
-  "professionalEmail": "contact@zen.example",
   "website": "https://zen.example",
   "instagram": "@zenstudio",
-  "activityTypes": "Yoga, Pilates",
-  "desiredSeats": "20",
   "managerFirstName": "Alex",
-  "managerLastName": "Martin"
+  "managerLastName": "Martin",
+  "managerEmail": "contact@zen.example",
+  "managerPhoneNumber": "+33100000000"
 }
 ```
 
-Responses add `id`, `status`, `ownerUserId` and `createdAt`.
+Responses add `id`, `status` and `createdAt`.
 
 **Errors:** `PARTNER_NOT_FOUND` (404), `PARTNER_ALREADY_EXISTS` (409), `PARTNER_NOT_ACTIVE` (409), `FORBIDDEN_OPERATION` (403).
 
@@ -151,21 +150,24 @@ Existing endpoints affected: `/api/activities`, bookings and payouts (partner st
 
 ## 8. User stories and acceptance criteria
 
-### US-01 Sign up a partner (Partner owner)
+> The partner APIs (`POST`, `GET`, `PUT`, `PATCH` on `/api/partners/**`) are exclusively accessed by operators with admin roles. Other services use `/internal/partners/{id}`.
 
-As a prospective partner, I want to submit my venue so that I can be listed on the platform.
+### US-01 Create a partner (Admin)
 
-- **Given** I am authenticated and own no partner, **when** I submit valid mandatory fields, **then** a partner is created with status `PENDING` and I am its owner.
-- **Given** I already own a partner, **when** I submit another, **then** I get a 409.
-- **Given** a mandatory field is missing, **when** I submit, **then** I get a 400 validation error.
-- **Given** I provide an invalid email, **when** I submit, **then** I get a 400 validation error.
+As an admin, I want to create partner records so that venues are registered on the platform.
 
-### US-02 Update my profile (Partner owner)
+- **Given** I am an admin, **when** I submit valid mandatory fields with an owner user id, **then** a partner is created with status `PENDING`.
+- **Given** the provided owner already owns a partner, **when** I create another, **then** I get a 409.
+- **Given** a mandatory field is missing, **when** I create a partner, **then** I get a 400 validation error.
+- **Given** an invalid email is provided, **when** I create a partner, **then** I get a 400 validation error.
+- **Given** I am not an admin, **when** I create a partner, **then** I get a 403.
 
-As a partner owner, I want to edit my profile so that my information stays current.
+### US-02 Update a partner profile (Admin)
 
-- **Given** I own the partner, **when** I update its profile, **then** the changes are saved and status and owner are unchanged.
-- **Given** I do not own the partner and am not an admin, **when** I update it, **then** I get a 403.
+As an admin, I want to edit partner profiles so that their information stays current.
+
+- **Given** I am an admin, **when** I update a partner's profile, **then** the changes are saved and status and owner are unchanged.
+- **Given** I am not an admin, **when** I update a partner, **then** I get a 403.
 - **Given** I send `status` or `ownerUserId` in the update, **then** they are ignored.
 
 ### US-03 Review a partner (Admin)
@@ -184,19 +186,21 @@ As an admin, I want to suspend a partner so that it stops receiving bookings.
 - **Given** an `ACTIVE` partner, **when** I suspend it, **then** it disappears from public listings and cannot create activities or receive bookings.
 - **Given** a `SUSPENDED` partner, **when** I reactivate it, **then** it is `ACTIVE` again with its data intact.
 
-### US-05 Browse partners (Member)
+### US-05 Browse partners (Admin)
 
-As a member, I want to browse and filter partners so that I can find where to go.
+As an admin, I want to browse and filter partners so that I can review and manage the catalog.
 
-- **Given** partners in several statuses, **when** I list partners, **then** only `ACTIVE` ones are returned.
+- **Given** partners in several statuses, **when** I list partners with a `status` filter, **then** only partners with that status are returned.
 - **Given** partners in several cities, **when** I filter by `city`, **then** only matching partners are returned, whatever the casing.
+- **Given** I am not an admin, **when** I list partners, **then** I get a 403.
 
-### US-06 View my partner (Partner owner)
+### US-06 View a partner detail (Admin)
 
-As a partner owner, I want to see my partner and its status.
+As an admin, I want to see a partner's details and status.
 
-- **Given** I own a partner, **when** I call `/mine`, **then** I get it whatever its status.
-- **Given** I own no partner, **when** I call `/mine`, **then** I get a 404.
+- **Given** I am an admin and a partner exists, **when** I request it by id, **then** I get its details and status.
+- **Given** I am an admin and the id is unknown, **when** I request it, **then** I get a 404.
+- **Given** I am not an admin, **when** I request a partner by id, **then** I get a 403.
 
 ### US-07 Be notified of status changes (Partner owner)
 
@@ -207,18 +211,17 @@ As a partner owner, I want to be told when my partner is approved, rejected or s
 ## 9. Data migration
 
 1. The columns `category`, `latitude`, `longitude` and `manager_role` are dropped from `partners` (Liquibase changeset 002); their values are lost.
-2. No other schema or data change is required, unless `desiredSeats` is changed to a numeric type (see Q-03).
+2. Partner address and manager contact fields are reorganised: `address` becomes `partner_street`, `city` becomes `partner_city` with a new `partner_zip_code`, and `phone`/`professionalEmail` become `manager_phone_number`/`manager_email`; `activity_types` and `desired_seats` are dropped.
 
 ## 10. Risks and open questions
 
-| #    | Item                                                                  | Mitigation / owner         |
-| ---- | --------------------------------------------------------------------- | -------------------------- |
-| R-01 | Enforcing transitions (FR-10) may block current admin practice        | Validate with admins first |
-| R-02 | In-memory filtering degrades as the partner count grows               | FR-13                      |
-| Q-01 | Can a `REJECTED` owner re-apply, given the one-partner-per-user rule? | Product owner              |
-| Q-02 | Should public listings expose contact details and manager name?       | Product owner / DPO        |
-| Q-03 | Should `desiredSeats` become numeric?                                 | Tech lead                  |
-| Q-04 | Which channel is used for status notifications (email, in-app)?       | Product owner              |
+| #    | Item                                                                                                              | Mitigation / owner         |
+| ---- | ----------------------------------------------------------------------------------------------------------------- | -------------------------- |
+| R-01 | Enforcing transitions (FR-10) may block current admin practice                                                    | Validate with admins first |
+| R-02 | In-memory filtering degrades as the partner count grows                                                           | FR-13                      |
+| Q-01 | Can a partner be created for an owner whose previous partner was `REJECTED`, given the one-partner-per-user rule? | Product owner              |
+| Q-02 | Should public listings expose contact details and manager name?                                                   | Product owner / DPO        |
+| Q-03 | Which channel is used for status notifications (email, in-app)?                                                   | Product owner              |
 
 ## 11. Acceptance and sign-off
 

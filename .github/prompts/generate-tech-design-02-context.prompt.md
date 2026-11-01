@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the context section of a tech design document"
+---
+
 # Generate Tech Design Context Section
 
 ## Role

@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the overall architecture section of a tech design document"
+---
+
 # Generate Tech Design Overall Architecture Section
 
 ## Role

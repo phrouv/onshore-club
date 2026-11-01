@@ -1,64 +1,58 @@
 package com.onshore.services.model;
 
 import com.onshore.common_lib.enums.UserRole;
+import com.onshore.common_lib.model.AbstractFullAuditingEntity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import java.io.Serializable;
+import jakarta.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.data.domain.Persistable;
 
 @Entity
-@Table(name = "users")
-@EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-public class User implements Serializable, Persistable<UUID> {
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(
+    name = "users",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          columnNames = {"email"},
+          name = "uk_users_email")
+    })
+public class User extends AbstractFullAuditingEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  @Column(name = "ID", columnDefinition = "uuid", updatable = false, nullable = false)
-  private UUID id;
-
-  @NotBlank(message = "fullName is mandatory")
+  @Column(name = "full_name", length = 100, nullable = false)
+  @Size(max = 100, message = "fullName must not exceed 100 characters")
+  @NotNull(message = "fullName is mandatory")
   private String fullName;
 
+  @Column(name = "password", nullable = false)
+  @NotBlank(message = "Password is mandatory")
   private String password;
 
-  @Column(nullable = false, unique = true)
-  @NotBlank(message = "Email is mandatory")
+  @Column(name = "email", length = 100, nullable = false)
+  @NotNull(message = "Email is mandatory")
+  @Size(max = 100, message = "Email must not exceed 100 characters")
   @Email(message = "Email should be valid")
   private String email;
 
+  @Column(name = "phone", length = 20)
+  @Size(max = 20, message = "Phone must not exceed 20 characters")
   private String phone;
 
   @Enumerated(EnumType.STRING)
-  @Column(nullable = false, length = 20)
+  @Column(name = "role", nullable = false, length = 20)
   @NotNull(message = "Role is mandatory")
   private UserRole role;
 
-  @Column(nullable = false, updatable = false)
-  @CreationTimestamp
-  private LocalDateTime createdAt;
-
-  @Column(nullable = false)
-  @UpdateTimestamp
-  private LocalDateTime updatedAt;
-
-  @Column(nullable = false)
+  @Builder.Default
+  @Column(name = "verified", nullable = false)
   private Boolean verified = false;
 
+  @Column(name = "last_login")
   private LocalDateTime lastLogin;
-
-  @Override
-  public boolean isNew() {
-    return this.id == null;
-  }
 }

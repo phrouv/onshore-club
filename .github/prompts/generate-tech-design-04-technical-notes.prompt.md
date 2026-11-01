@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the technical notes section of a tech design document"
+---
+
 # Generate Tech Design Technical Notes Section
 
 ## Role
@@ -8,7 +13,7 @@ Generate the technical notes section using ONLY standards, dependencies, and con
 
 ## Repository Sources to Analyze
 Before generating content, you MUST scan:
-- `ai/rules/` - For actual coding standards and architectural rules
+- `.github/instructions/` - For actual coding standards and architectural rules
 - `onshore-frontend/package.json` - For real frontend dependencies
 - `microservices/pom.xml`, `microservices/services/*/pom.xml` and `microservices/common-lib/pom.xml` - For actual backend dependencies
 - `microservices/services/*/src/` and `onshore-frontend/src/` - For implemented patterns and frameworks
@@ -23,7 +28,7 @@ Before generating content, you MUST scan:
 - `{{DEPENDENCIES}}` - External libraries, systems, or resources required for implementation
 
 ## Instructions
-1. **FIRST**: Extract actual coding standards from `/ai/rules/` folder contents
+1. **FIRST**: Extract actual coding standards from `/.github/instructions/` folder contents
 2. List ONLY dependencies found in real `package.json` and `pom.xml` files with exact versions
 3. Reference specific rule files for coding standards and patterns  
 4. Extract performance/security requirements from actual repository documentation

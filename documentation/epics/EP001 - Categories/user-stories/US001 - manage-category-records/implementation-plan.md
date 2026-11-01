@@ -85,7 +85,7 @@ Implement category creation and editing for admins so category records have a un
 ### Notes
 
 - Always follow existing code style and structure.
-- Follow the backend/frontend instruction rule files in `ai/rules/` and the API/database specifications in `specifications/` when implementation begins.
+- Follow the backend/frontend instruction rule files in `.github/instructions/` and the API/database specifications in `specifications/` when implementation begins.
 - Defer category activation, pricing, and activity assignment to their separate stories.
 - Do not invent exact validation error text; the story does not specify it.
 - Confirm endpoint paths before implementation; they are not specified in this story.

@@ -120,7 +120,7 @@ Represent the structural impact as a tree (mirror example style exactly; keep on
 
 ### Notes
 - Always follow existing code style & structure
-- Follow the backend/frontend instruction rule files in `ai/rules/` and the API/database specifications in `specifications/`
+- Follow the backend/frontend instruction rule files in `.github/instructions/` and the API/database specifications in `specifications/`
 - Defer non-required fields / operations to future stories
 
 ## Status

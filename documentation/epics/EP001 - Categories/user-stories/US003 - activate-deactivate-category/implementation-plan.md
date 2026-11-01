@@ -28,7 +28,7 @@ Implement the activation and deactivation of categories by admins from the categ
 - ✅ `PATCH /api/categories/{code}/status` sets the `active` flag; admin-only, non-admin requests are rejected with 403.
 - ✅ Return 404 for an unknown category code.
 - ✅ Leave existing activity references untouched; only the status changes.
-- ✅ Only admins can list inactive categories; other users always receive the active ones.
+- ✅ The categories list is admin-only; non-admin requests are rejected with 403.
 - ✅ Swagger annotations: none added, following the existing convention.
 - ✅ Integration tests for the story's acceptance criteria:
   - ✅ Admin deactivates a category; it is excluded from the active category list.

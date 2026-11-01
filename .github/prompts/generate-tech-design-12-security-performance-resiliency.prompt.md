@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the security, performance, and resiliency section of a tech design document"
+---
+
 # Generate Tech Design Security, Performance, and Resiliency Section
 
 ## Role
@@ -14,7 +19,7 @@ Before generating content, you MUST scan:
 
 - `microservices/cloud/api-gateway/` and `microservices/services/user-service/` - For authentication/authorization and gateway security
 - `config-repo/` - For centralized security and performance configuration
-- `ai/rules/` - For established security and performance rules
+- `.github/instructions/` - For established security and performance rules
 - `microservices/services/*/src/main/java/com/onshore/services/config/` - For security configuration classes
 - `docker-compose.yml` - For infrastructure security and performance settings
 - `microservices/services/*/src/main/resources/application*.yaml` - For actual performance configurations

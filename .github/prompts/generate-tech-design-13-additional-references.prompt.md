@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the additional references section of a tech design document"
+---
+
 # Generate Tech Design Additional References Section
 
 ## Role

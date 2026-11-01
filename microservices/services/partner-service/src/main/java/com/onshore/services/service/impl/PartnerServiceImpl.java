@@ -58,7 +58,10 @@ public class PartnerServiceImpl implements PartnerService {
   public List<PartnerResponse> list(PartnerStatus status, String city) {
     return partnerRepository.findAll().stream()
         .filter(p -> status == null || p.getStatus() == status)
-        .filter(p -> city == null || city.equalsIgnoreCase(p.getCity()))
+        .filter(
+            p ->
+                city == null
+                    || (p.getAddress() != null && city.equalsIgnoreCase(p.getAddress().getCity())))
         .map(PartnerMapper::toResponse)
         .toList();
   }

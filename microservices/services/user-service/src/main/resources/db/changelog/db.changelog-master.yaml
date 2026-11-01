@@ -20,35 +20,27 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: full_name
-                  type: VARCHAR(255)
+                  type: VARCHAR(100)
                   constraints:
                     nullable: false
               - column:
                   name: password
                   type: VARCHAR(255)
+                  constraints:
+                    nullable: false
               - column:
                   name: email
-                  type: VARCHAR(255)
+                  type: VARCHAR(100)
                   constraints:
                     nullable: false
                     unique: true
                     uniqueConstraintName: uk_users_email
               - column:
                   name: phone
-                  type: VARCHAR(50)
+                  type: VARCHAR(20)
               - column:
                   name: role
                   type: VARCHAR(20)
-                  constraints:
-                    nullable: false
-              - column:
-                  name: created_at
-                  type: TIMESTAMP
-                  constraints:
-                    nullable: false
-              - column:
-                  name: updated_at
-                  type: TIMESTAMP
                   constraints:
                     nullable: false
               - column:
@@ -59,4 +51,13 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: last_login
-                  type: TIMESTAMP
+                  type: TIMESTAMP WITHOUT TIME ZONE
+              - column:
+                  name: created_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE

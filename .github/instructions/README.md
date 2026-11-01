@@ -12,7 +12,7 @@ applyTo: "microservices/**"
 ## Structure
 
 ```
-ai/rules/
+.github/instructions/
 ├─ repository.instructions.md
 ├─ backend/
 │  ├─ spring-boot.instructions.md

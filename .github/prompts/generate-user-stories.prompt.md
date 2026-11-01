@@ -18,7 +18,7 @@ Your task:
    - Shared **design/API links**
    - Consistency in **technical and business context**
 3. Generate **highly detailed user stories** based on the Epic, an epic can have multiple user stories, don't combine user stories.
-4. Follow the instructions given in the file `ai/rules/conception/conception-phase.instructions.md` about the User Story structure and content.
+4. Follow the instructions given in the file `.github/instructions/conception/conception-phase.instructions.md` about the User Story structure and content.
 
 ## Acceptance Criteria Guidelines (Functional Only)
 When producing acceptance criteria inside each user story (as per the conception rules):

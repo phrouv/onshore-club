@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the solution approach section of a tech design document"
+---
+
 # Generate Tech Design Solution Approach Section
 
 ## Role

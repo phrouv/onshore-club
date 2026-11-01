@@ -54,12 +54,12 @@ Define the requirements for managing **categories** (e.g. yoga, climbing, spa) a
 
 ## 2. Stakeholders and users
 
-| Role                              | Interest                      | Permissions                                        |
-| --------------------------------- | ----------------------------- | -------------------------------------------------- |
-| Admin                             | Maintains catalog and pricing | Full CRUD on categories and credit grid            |
-| Partner                           | Classifies own activities     | Read categories; pick one when creating activities |
-| Member                            | Discovers activities          | Read categories; filter listings                   |
-| Other services (planning, credit) | Resolve prices                | Internal read access                               |
+| Role                              | Interest                      | Permissions                                                                              |
+| --------------------------------- | ----------------------------- | ---------------------------------------------------------------------------------------- |
+| Admin                             | Maintains catalog and pricing | Full read and CRUD on categories and credit grid (categories APIs admin-only)            |
+| Partner                           | Classifies own activities     | No direct category API access; selects a category code when creating/updating activities |
+| Member                            | Discovers activities          | No direct category API access; filters activity listings by category code                |
+| Other services (planning, credit) | Resolve prices                | Internal (service-to-service) read access                                                |
 
 ## 3. Assumptions, dependencies, constraints
 
@@ -74,7 +74,7 @@ Define the requirements for managing **categories** (e.g. yoga, climbing, spa) a
 | FR-01 | An admin can create a category with a unique code, a display name and an optional description.                                                                                                  | Must     |
 | FR-02 | An admin can rename or edit a category without changing its code.                                                                                                                               | Must     |
 | FR-03 | An admin can deactivate or reactivate a category from the categories list; inactive categories cannot be selected for new activities but remain on existing ones.                               | Must     |
-| FR-04 | Any authenticated user can list active categories. Admins can also list inactive ones.                                                                                                          | Must     |
+| FR-04 | Only operators with admin roles can list categories, including inactive ones.                                                                                                                   | Must     |
 | FR-05 | Creating or updating an activity requires an existing, active category code; unknown codes are rejected with a validation error.                                                                | Must     |
 | FR-06 | Category code matching is case-insensitive and unique (no duplicates differing only by case or spaces).                                                                                         | Must     |
 | FR-07 | `GET /api/activities` filters by category code.                                                                                                                                                 | Must     |
@@ -96,7 +96,7 @@ Define the requirements for managing **categories** (e.g. yoga, climbing, spa) a
 
 | ID     | Category       | Requirement                                                                             |
 | ------ | -------------- | --------------------------------------------------------------------------------------- |
-| NFR-01 | Security       | Write operations are admin-only; enforced server-side, not only in the UI.              |
+| NFR-01 | Security       | All category API operations are admin-only; enforced server-side, not only in the UI.   |
 | NFR-02 | Performance    | Category list responds in under 200 ms at p95 and can be cached by consumers.           |
 | NFR-03 | Data integrity | Migration is idempotent and reversible; no loss of existing activity/class data.        |
 | NFR-04 | Compatibility  | Existing API clients sending a category string keep working during a transition period. |
@@ -105,13 +105,13 @@ Define the requirements for managing **categories** (e.g. yoga, climbing, spa) a
 
 ## 7. Interfaces (proposed)
 
-| Method | Endpoint                        | Access        | Description                                              |
-| ------ | ------------------------------- | ------------- | -------------------------------------------------------- |
-| GET    | `/api/categories`               | Authenticated | List categories (`?active=true`)                         |
-| GET    | `/api/categories/{code}`        | Authenticated | Category detail                                          |
-| POST   | `/api/categories`               | Admin         | Create category                                          |
-| PUT    | `/api/categories/{code}`        | Admin         | Update name, description and/or `image` (code immutable) |
-| PATCH  | `/api/categories/{code}/status` | Admin         | Activate or deactivate (`?active=true\|false`)           |
+| Method | Endpoint                        | Access | Description                                              |
+| ------ | ------------------------------- | ------ | -------------------------------------------------------- |
+| GET    | `/api/categories`               | Admin  | List categories (`?active=true`)                         |
+| GET    | `/api/categories/{code}`        | Admin  | Category detail                                          |
+| POST   | `/api/categories`               | Admin  | Create category                                          |
+| PUT    | `/api/categories/{code}`        | Admin  | Update name, description and/or `image` (code immutable) |
+| PATCH  | `/api/categories/{code}/status` | Admin  | Activate or deactivate (`?active=true\|false`)           |
 
 **Category payload**
 
@@ -128,6 +128,8 @@ Define the requirements for managing **categories** (e.g. yoga, climbing, spa) a
 Existing endpoints affected: `/api/activities`, `/api/credit-settings/{category}`.
 
 ## 8. User stories and acceptance criteria
+
+> The categories APIs (`GET`, `POST`, `PUT`, `PATCH`) are exclusively accessed by operators with admin roles. Partner and member scenarios below operate through activity/listing endpoints, not the categories API.
 
 ### US-01 Manage categories (Admin)
 

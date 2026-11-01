@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the data migration section of a tech design document"
+---
+
 # Generate Tech Design Data Migration Section
 
 ## Role
@@ -16,7 +21,7 @@ Before generating content, you MUST scan:
 - `init-databases.sql` and `docker-compose.yml` - For database provisioning
 - `microservices/services/*/src/main/resources/db/changelog/` - For existing Liquibase migration files
 - `microservices/services/*/src/main/java/com/onshore/services/model/` - For actual JPA entity definitions and data models
-- `ai/rules/database/` - For established database migration practices
+- `.github/instructions/database/` - For established database migration practices
 
 ## Input Parameters
 

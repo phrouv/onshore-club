@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the code bootstrap section of a tech design document"
+---
+
 # Generate Tech Design Code Bootstrap Section
 
 ## Role
@@ -11,8 +16,8 @@ Before generating content, you MUST scan:
 - `microservices/services/*/src/main/java/` - For actual controller, service, and configuration patterns
 - `microservices/services/*/src/main/resources/` and `config-repo/` - For configuration file examples
 - `microservices/common-lib/` - For shared code patterns
-- `ai/rules/backend/` - For established coding patterns and rules
-- `ai/rules/frontend/` - For frontend implementation patterns  
+- `.github/instructions/backend/` - For established coding patterns and rules
+- `.github/instructions/frontend/` - For frontend implementation patterns  
 - `microservices/**/pom.xml` - For actual dependency configurations
 - `onshore-frontend/package.json` and `onshore-frontend/src/` - For frontend build, dependency and code patterns
 

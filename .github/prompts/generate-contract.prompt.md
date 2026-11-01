@@ -1,5 +1,6 @@
 ---
 agent: agent
+description: "Generate an OpenAPI 3.0 specification from a feature description"
 ---
 # OpenAPI Contract Generator Prompt
 

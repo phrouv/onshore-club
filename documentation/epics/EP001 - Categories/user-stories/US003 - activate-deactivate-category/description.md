@@ -51,5 +51,5 @@ graph TD
 
 - Deactivation is the supported alternative to deleting a category that may have existing references.
 - EP001 proposes `PATCH /api/categories/{code}/status` for status changes; it is implemented as `PATCH /api/categories/{code}/status?active=true|false`, admin-only.
-- Only admins can list inactive categories; other users always receive the active ones.
+- Only admins can access the categories list; non-admin users have no access to the categories API and receive a 403.
 - Rejecting inactive categories on new activity assignments (FR-05) is not implemented here; it belongs to US004.

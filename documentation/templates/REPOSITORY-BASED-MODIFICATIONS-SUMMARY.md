@@ -23,7 +23,7 @@ Each prompt now requires scanning specific repository locations:
 | User Stories | `/documentation/backlog/` | Backlog items and acceptance criteria |
 | API Specifications | `/documentation/api-specs-conception/` | Existing API documentation |
 | Database Schemas | `/documentation/database/` | Data models and schema definitions |
-| Technical Rules | `/ai/rules/` | Coding standards and architectural patterns |
+| Technical Rules | `/.github/instructions/` | Coding standards and architectural patterns |
 | Application Code | `/apps/*/src/` | Actual implementation patterns |
 | Dependencies | `/apps/*/package.json`, `/apps/*/pom.xml` | Real dependency lists |
 | Infrastructure | `/docker-compose.yml`, `/config/` | Service and configuration definitions |
@@ -53,11 +53,11 @@ Each prompt now requires scanning specific repository locations:
 | 01 | `generate-tech-design-01-document-title.prompt.md` | `/documentation/`, `/README.md`, `/apps.json` |
 | 02 | `generate-tech-design-02-context.prompt.md` | `/documentation/epics/`, `/documentation/backlog/`, `/documentation/personae/` |
 | 03 | `generate-tech-design-03-overall-architecture.prompt.md` | `/apps/`, `/docker-compose.yml`, `/apps.json` |
-| 04 | `generate-tech-design-04-technical-notes.prompt.md` | `/ai/rules/`, `/apps/*/package.json`, `/apps/*/pom.xml` |
+| 04 | `generate-tech-design-04-technical-notes.prompt.md` | `/.github/instructions/`, `/apps/*/package.json`, `/apps/*/pom.xml` |
 | 08 | `generate-tech-design-08-api-documentation.prompt.md` | `/apps/*/src/`, `/documentation/api-specs-conception/` |
-| 09 | `generate-tech-design-09-code-bootstrap.prompt.md` | `/apps/*/src/`, `/ai/rules/backend/`, `/ai/rules/frontend/` |
+| 09 | `generate-tech-design-09-code-bootstrap.prompt.md` | `/apps/*/src/`, `/.github/instructions/backend/`, `/.github/instructions/frontend/` |
 | 11 | `generate-tech-design-11-data-migration.prompt.md` | `/documentation/database/`, `/apps/*/src/main/resources/db/` |
-| 12 | `generate-tech-design-12-security-performance-resiliency.prompt.md` | `/config/keycloak/`, `/ai/rules/`, security configurations |
+| 12 | `generate-tech-design-12-security-performance-resiliency.prompt.md` | `/config/keycloak/`, `/.github/instructions/`, security configurations |
 
 ### 5. Quality Assurance Updates
 

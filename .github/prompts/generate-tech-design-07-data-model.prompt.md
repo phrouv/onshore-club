@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the data model schema update section of a tech design document"
+---
+
 # Generate Tech Design Data Model Schema Update Section
 
 ## Role

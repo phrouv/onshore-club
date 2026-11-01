@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the diagrams section of a tech design document"
+---
+
 # Generate Tech Design Diagrams Section
 
 ## Role

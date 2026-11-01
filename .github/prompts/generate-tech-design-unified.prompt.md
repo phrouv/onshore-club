@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate a complete unified tech design document in a single prompt"
+---
+
 ```prompt
 # Generate Tech Design Document - Unified Prompt
 
@@ -235,7 +240,7 @@ Generate the technical notes section using ONLY standards, dependencies, and con
 
 ## Repository Sources to Analyze
 Before generating content, you MUST scan:
-- `ai/rules/` - For actual coding standards and architectural rules
+- `.github/instructions/` - For actual coding standards and architectural rules
 - `onshore-frontend/package.json` - For real frontend dependencies
 - `microservices/pom.xml`, `microservices/services/*/pom.xml` and `microservices/common-lib/pom.xml` - For actual backend dependencies
 - `microservices/services/*/src/` and `onshore-frontend/src/` - For implemented patterns and frameworks
@@ -250,7 +255,7 @@ Before generating content, you MUST scan:
 - `{{DEPENDENCIES}}` - External libraries, systems, or resources required for implementation
 
 ## Instructions
-1. **FIRST**: Extract actual coding standards from `/ai/rules/` folder contents
+1. **FIRST**: Extract actual coding standards from `/.github/instructions/` folder contents
 2. List ONLY dependencies found in real `package.json` and `pom.xml` files with exact versions
 3. Reference specific rule files for coding standards and patterns
 4. Extract performance/security requirements from actual repository documentation
@@ -554,8 +559,8 @@ Before generating content, you MUST scan:
 - `microservices/services/*/src/main/java/` - For actual controller, service, and configuration patterns
 - `microservices/services/*/src/main/resources/` and `config-repo/` - For configuration file examples
 - `microservices/common-lib/` - For shared code patterns
-- `ai/rules/backend/` - For established coding patterns and rules
-- `ai/rules/frontend/` - For frontend implementation patterns
+- `.github/instructions/backend/` - For established coding patterns and rules
+- `.github/instructions/frontend/` - For frontend implementation patterns
 - `microservices/**/pom.xml` - For actual dependency configurations
 - `onshore-frontend/package.json` and `onshore-frontend/src/` - For frontend build, dependency and code patterns
 
@@ -688,7 +693,7 @@ Before generating content, you MUST scan:
 - `init-databases.sql` and `docker-compose.yml` - For database provisioning
 - `microservices/services/*/src/main/resources/db/changelog/` - For existing Liquibase migration files
 - `microservices/services/*/src/main/java/com/onshore/services/model/` - For actual JPA entity definitions and data models
-- `ai/rules/database/` - For established database migration practices
+- `.github/instructions/database/` - For established database migration practices
 
 ## Input Parameters
 - `{{DATE}}` - Date for the document (format: YYYY-MM-DD)
@@ -755,7 +760,7 @@ Generate security, performance, and resiliency documentation using ONLY measures
 Before generating content, you MUST scan:
 - `microservices/cloud/api-gateway/` and `microservices/services/user-service/` - For authentication/authorization and gateway security
 - `config-repo/` - For centralized security and performance configuration
-- `ai/rules/` - For established security and performance rules
+- `.github/instructions/` - For established security and performance rules
 - `microservices/services/*/src/main/java/com/onshore/services/config/` - For security configuration classes
 - `docker-compose.yml` - For infrastructure security and performance settings
 - `microservices/services/*/src/main/resources/application*.yaml` - For actual performance configurations

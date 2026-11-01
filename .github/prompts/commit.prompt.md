@@ -26,7 +26,7 @@ This prompt is designed to create proper git commits following the project's git
 
 You are an expert Git practitioner tasked with creating clean, meaningful commits that follow project standards. 
 
-Follow the instructions given in the file `ai/rules/version-control/version-control.instructions.md`.
+Follow the instructions given in the file `.github/instructions/version-control/version-control.instructions.md`.
 
 ### Ultra-Simple Workflow (Single Command Philosophy)
 

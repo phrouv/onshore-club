@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the API documentation section of a tech design document"
+---
+
 # Generate Tech Design API Documentation Section
 
 ## Role

@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the document title section of a tech design document from repository information"
+---
+
 # Generate Tech Design Document Title
 
 ## Role

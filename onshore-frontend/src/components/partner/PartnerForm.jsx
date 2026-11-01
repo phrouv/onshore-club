@@ -10,17 +10,16 @@ import {
 
 const EMPTY = {
   name: "",
-  address: "",
+  street: "",
   city: "",
+  zipCode: "",
   description: "",
-  phone: "",
-  professionalEmail: "",
   website: "",
   instagram: "",
-  activityTypes: "",
-  desiredSeats: "",
   managerFirstName: "",
   managerLastName: "",
+  managerEmail: "",
+  managerPhoneNumber: "",
 };
 
 const toForm = (partner) =>
@@ -32,7 +31,7 @@ export function PartnerForm({ partner }) {
   const user = useSelector((s) => s.auth.user);
   const [form, setForm] = useState(() => ({
     ...toForm(partner),
-    professionalEmail: partner?.professionalEmail ?? user?.email ?? "",
+    managerEmail: partner?.managerEmail ?? user?.email ?? "",
   }));
   const [errors, setErrors] = useState({});
 
@@ -41,7 +40,7 @@ export function PartnerForm({ partner }) {
   const submit = async (event) => {
     event.preventDefault();
     const next = {};
-    for (const key of ["name", "address", "city"]) {
+    for (const key of ["name", "street", "city", "zipCode"]) {
       if (!form[key].trim()) next[key] = "Champ obligatoire";
     }
     setErrors(next);
@@ -62,17 +61,24 @@ export function PartnerForm({ partner }) {
       <Field label="Ville" error={errors.city}>
         <Input value={form.city} onChange={set("city")} />
       </Field>
-      <Field label="Adresse" error={errors.address}>
-        <Input value={form.address} onChange={set("address")} />
+      <Field label="Adresse" error={errors.street}>
+        <Input value={form.street} onChange={set("street")} />
+      </Field>
+      <Field label="Code postal" error={errors.zipCode}>
+        <Input value={form.zipCode} onChange={set("zipCode")} />
       </Field>
       <Field label="Téléphone">
-        <Input type="tel" value={form.phone} onChange={set("phone")} />
+        <Input
+          type="tel"
+          value={form.managerPhoneNumber}
+          onChange={set("managerPhoneNumber")}
+        />
       </Field>
       <Field label="E-mail professionnel">
         <Input
           type="email"
-          value={form.professionalEmail}
-          onChange={set("professionalEmail")}
+          value={form.managerEmail}
+          onChange={set("managerEmail")}
         />
       </Field>
       <Field label="Site web">
@@ -80,12 +86,6 @@ export function PartnerForm({ partner }) {
       </Field>
       <Field label="Instagram">
         <Input value={form.instagram} onChange={set("instagram")} />
-      </Field>
-      <Field label="Types d'activités proposées">
-        <Input value={form.activityTypes} onChange={set("activityTypes")} />
-      </Field>
-      <Field label="Places souhaitées pour ON SHORE CLUB">
-        <Input value={form.desiredSeats} onChange={set("desiredSeats")} />
       </Field>
       <Field label="Prénom du responsable">
         <Input

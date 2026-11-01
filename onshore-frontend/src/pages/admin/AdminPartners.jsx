@@ -13,7 +13,6 @@ import { Pencil, Power } from "lucide-react";
 import {
   createPartner,
   editPartner,
-  fetchAllActivities,
   fetchAllPartners,
   fetchPayoutSummary,
   setPartnerStatus,
@@ -24,24 +23,31 @@ import { Field, Input, Textarea } from "../../components/ui/Field";
 
 const EMPTY = {
   name: "",
-  city: "Seignosse",
-  address: "",
+  city: "",
+  street: "",
+  zipCode: "",
   description: "",
+  website: "",
+  instagram: "",
+  managerFirstName: "",
+  managerLastName: "",
+  managerEmail: "",
+  managerPhoneNumber: "",
   active: true,
 };
 
-const FIELDS = ["name", "city", "address", "description"];
-
-// Fields not shown in the form are re-sent so the PUT does not erase them.
-const PRESERVED = [
-  "phone",
-  "professionalEmail",
+const FORM_FIELDS = [
+  "name",
+  "city",
+  "street",
+  "zipCode",
+  "description",
   "website",
   "instagram",
-  "activityTypes",
-  "desiredSeats",
   "managerFirstName",
   "managerLastName",
+  "managerEmail",
+  "managerPhoneNumber",
 ];
 
 function PartnerModal({ open, partner, onClose }) {
@@ -49,7 +55,7 @@ function PartnerModal({ open, partner, onClose }) {
   const [form, setForm] = useState(() =>
     partner
       ? {
-          ...Object.fromEntries(FIELDS.map((k) => [k, partner[k] ?? ""])),
+          ...Object.fromEntries(FORM_FIELDS.map((k) => [k, partner[k] ?? ""])),
           active: partner.status === "ACTIVE",
         }
       : EMPTY,
@@ -67,7 +73,7 @@ function PartnerModal({ open, partner, onClose }) {
   const submit = async (event) => {
     event.preventDefault();
     const next = {};
-    for (const key of ["name", "city", "address"]) {
+    for (const key of ["name", "city", "street", "zipCode"]) {
       if (!form[key].trim()) next[key] = "Champ obligatoire";
     }
     setErrors(next);
@@ -78,10 +84,7 @@ function PartnerModal({ open, partner, onClose }) {
       ? await run(
           editPartner({
             id: partner.id,
-            body: {
-              ...Object.fromEntries(PRESERVED.map((k) => [k, partner[k]])),
-              ...body,
-            },
+            body,
             status:
               active === (partner.status === "ACTIVE")
                 ? null
@@ -101,24 +104,65 @@ function PartnerModal({ open, partner, onClose }) {
       title={partner ? "Modifier le partenaire" : "Nouveau partenaire"}
       onClose={close}
     >
-      <form onSubmit={submit} className="flex flex-col gap-3">
-        <Field label="Nom du club" error={errors.name}>
+      <form onSubmit={submit} className="grid grid-cols-2 gap-3">
+        <Field label="Nom" error={errors.name}>
           <Input value={form.name} onChange={set("name")} />
         </Field>
         <Field label="Ville" error={errors.city}>
           <Input value={form.city} onChange={set("city")} />
         </Field>
-        <Field label="Adresse" error={errors.address}>
-          <Input value={form.address} onChange={set("address")} />
+        <Field label="Adresse" error={errors.street}>
+          <Input value={form.street} onChange={set("street")} />
         </Field>
-        <Field label="Description">
-          <Textarea
-            rows={4}
-            value={form.description}
-            onChange={set("description")}
-          />
+        <Field label="Code postal" error={errors.zipCode}>
+          <Input value={form.zipCode} onChange={set("zipCode")} />
         </Field>
-        <label className="flex items-center justify-between rounded-xl bg-muted p-3 text-sm font-medium">
+        <div className="col-span-2">
+          <Field label="Description">
+            <Textarea
+              rows={4}
+              value={form.description}
+              onChange={set("description")}
+            />
+          </Field>
+        </div>
+        <Field label="Site web">
+          <Input value={form.website} onChange={set("website")} />
+        </Field>
+        <Field label="Instagram">
+          <Input value={form.instagram} onChange={set("instagram")} />
+        </Field>
+        <div className="col-span-2 flex flex-col gap-3 rounded-xl border border-border p-3">
+          <p className="text-sm font-semibold">Manager</p>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Prénom">
+              <Input
+                value={form.managerFirstName}
+                onChange={set("managerFirstName")}
+              />
+            </Field>
+            <Field label="Nom">
+              <Input
+                value={form.managerLastName}
+                onChange={set("managerLastName")}
+              />
+            </Field>
+            <Field label="Email">
+              <Input
+                type="email"
+                value={form.managerEmail}
+                onChange={set("managerEmail")}
+              />
+            </Field>
+            <Field label="Téléphone">
+              <Input
+                value={form.managerPhoneNumber}
+                onChange={set("managerPhoneNumber")}
+              />
+            </Field>
+          </div>
+        </div>
+        <label className="col-span-2 flex items-center justify-between rounded-xl bg-muted p-3 text-sm font-medium">
           Partenaire actif
           <input
             type="checkbox"
@@ -128,7 +172,7 @@ function PartnerModal({ open, partner, onClose }) {
             className="h-6 w-11 cursor-pointer appearance-none rounded-full bg-border transition-colors checked:bg-primary relative before:absolute before:top-0.5 before:left-0.5 before:size-5 before:rounded-full before:bg-card before:transition-transform checked:before:translate-x-5"
           />
         </label>
-        <div className="flex items-center justify-end gap-3">
+        <div className="col-span-2 flex items-center justify-end gap-3">
           <Button type="button" variant="ghost" onClick={close}>
             Annuler
           </Button>
@@ -143,16 +187,13 @@ function PartnerModal({ open, partner, onClose }) {
 
 export default function AdminPartners() {
   const dispatch = useDispatch();
-  const { partners, activities, payoutSummary, error } = useSelector(
-    (s) => s.admin,
-  );
+  const { partners, payoutSummary, error } = useSelector((s) => s.admin);
   const { run, busy } = useAction();
   const [creating, setCreating] = useState(false);
   const [editing, setEditing] = useState(null);
 
   useEffect(() => {
     dispatch(fetchAllPartners());
-    dispatch(fetchAllActivities());
     dispatch(fetchPayoutSummary());
   }, [dispatch]);
 
@@ -187,8 +228,8 @@ export default function AdminPartners() {
                 {[
                   "Partenaire",
                   "Adresse",
-                  "Activités",
-                  "Check-ins",
+                  "Site web",
+                  "Instagram",
                   "Rémunérations",
                   "Statut",
                   "",
@@ -202,9 +243,6 @@ export default function AdminPartners() {
             <tbody>
               {partners.map((p) => {
                 const stats = payoutSummary.find((s) => s.partnerId === p.id);
-                const activityCount = activities.filter(
-                  (a) => a.partnerId === p.id,
-                ).length;
                 return (
                   <tr
                     key={p.id}
@@ -212,10 +250,14 @@ export default function AdminPartners() {
                   >
                     <td className="px-3 py-4 font-medium">{p.name}</td>
                     <td className="px-3 py-4 text-muted-foreground">
-                      {p.address}, {p.city}
+                      {p.street}, {p.city}
                     </td>
-                    <td className="px-3 py-4">{activityCount}</td>
-                    <td className="px-3 py-4">{stats?.count ?? 0}</td>
+                    <td className="px-3 py-4 text-muted-foreground">
+                      {p.website || "—"}
+                    </td>
+                    <td className="px-3 py-4 text-muted-foreground">
+                      {p.instagram || "—"}
+                    </td>
                     <td className="px-3 py-4 font-semibold">
                       {money(stats?.total)}
                     </td>

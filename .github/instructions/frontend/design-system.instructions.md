@@ -18,7 +18,7 @@ applyTo: "onshore-frontend/**"
     // ...other tokens
   };
   ```
-- **Transformation:** If using Figma tokens plugin, automate token export/import via scripts in `ai/scripts/`.
+- **Transformation:** If using Figma tokens plugin, automate token export/import via scripts in `.github/instructions/scripts/`.
 
 ### 2. Component Library
 - **Location:** UI components live in `src/components/`.

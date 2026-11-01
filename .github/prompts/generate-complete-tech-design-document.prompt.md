@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate a complete technical design document by orchestrating all 13 tech design section prompts"
+---
+
 # Generate Complete Tech Design Document
 
 ## Role
@@ -31,7 +36,7 @@ Before generating any content, you MUST scan and analyze the following repositor
 - `microservices/README.md` - Project overview and setup
 
 ### Configuration and Standards
-- `ai/rules/` - Development rules and standards
+- `.github/instructions/` - Development rules and standards
 - `config-repo/` - Centralized service configuration
 
 ## Process Overview
@@ -90,7 +95,7 @@ Before generating any sections, you MUST:
 1. **Scan Documentation**: Use `semantic_search`, `grep_search`, and `read_file` tools to analyze all documentation folders
 2. **Analyze Codebase**: Review application structure in `microservices/` and `onshore-frontend/` for actual implementation details
 3. **Extract Dependencies**: Read actual `package.json`, `pom.xml`, and configuration files for real dependencies
-4. **Identify Patterns**: Review `/ai/rules/` for established coding standards and architectural patterns
+4. **Identify Patterns**: Review `/.github/instructions/` for established coding standards and architectural patterns
 5. **Map Existing APIs**: Find actual API endpoints and specifications in codebase and documentation
 
 ### Section Generation Process
@@ -118,5 +123,5 @@ After generation:
 - **Gap Documentation**: Ensure missing information is clearly marked as "NOT FOUND IN REPOSITORY" 
 - **Source Traceability**: Each technical claim must reference specific repository files or documentation
 - **Mermaid Accuracy**: Diagrams must reflect actual architecture found in repository code/config
-- **Existing Standards**: Follow only coding standards and patterns found in `/ai/rules/` folder
+- **Existing Standards**: Follow only coding standards and patterns found in `/.github/instructions/` folder
 - **Real Dependencies**: List only dependencies found in actual `package.json`, `pom.xml`, or config files

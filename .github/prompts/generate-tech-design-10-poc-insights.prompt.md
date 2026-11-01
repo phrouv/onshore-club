@@ -1,3 +1,8 @@
+---
+agent: agent
+description: "Generate the POC insights section of a tech design document"
+---
+
 # Generate Tech Design POC Insights Section
 
 ## Role
