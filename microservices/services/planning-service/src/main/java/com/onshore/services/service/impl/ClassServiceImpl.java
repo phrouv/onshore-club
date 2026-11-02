@@ -227,22 +227,20 @@ public class ClassServiceImpl implements ClassService {
     boolean admin = UserRole.isAdmin(roles);
     boolean partner = UserRole.has(roles, UserRole.ROLE_PARTNER.name());
     return sessions.stream()
-        .map(
-            c ->
-                new ClassResponse(
-                    c.getId(),
-                    c.getActivityId(),
-                    c.getPartnerId(),
-                    c.getDate(),
-                    c.getStartTime(),
-                    c.getEndTime(),
-                    c.getCapacity(),
-                    c.getOnePassCapacity(),
-                    Math.max(
-                        0, c.getOnePassCapacity() - counts.getOrDefault(c.getId(), 0L).intValue()),
-                    admin ? c.getDemandLevel() : null,
-                    admin || !partner ? c.getCreditsRequired() : null,
-                    c.getStatus()))
+        .map(c ->
+            new ClassResponse(
+                c.getId(),
+                c.getActivityId(),
+                c.getPartnerId(),
+                c.getDate(),
+                c.getStartTime(),
+                c.getEndTime(),
+                c.getCapacity(),
+                c.getOnePassCapacity(),
+                Math.max(0, c.getOnePassCapacity() - counts.getOrDefault(c.getId(), 0L).intValue()),
+                admin ? c.getDemandLevel() : null,
+                admin || !partner ? c.getCreditsRequired() : null,
+                c.getStatus()))
         .toList();
   }
 }

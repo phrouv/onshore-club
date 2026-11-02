@@ -72,13 +72,13 @@ export default function App() {
         <Route element={<ProtectedRoute role="ROLE_SYSTEM_ADMIN" />}>
           <Route path="/admin" element={<AdminShell />}>
             <Route index element={<AdminDashboard />} />
+            <Route path="categories" element={<AdminCategories />} />
             <Route path="partners" element={<AdminPartners />} />
             <Route path="members" element={<AdminMembers />} />
             <Route path="bookings" element={<AdminBookings />} />
             <Route path="credits" element={<AdminCredits />} />
             <Route path="payouts" element={<AdminPayouts />} />
             <Route path="rules" element={<AdminRules />} />
-            <Route path="categories" element={<AdminCategories />} />
             <Route path="clubs" element={<AdminClubs />} />
           </Route>
         </Route>

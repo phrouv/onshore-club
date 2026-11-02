@@ -56,8 +56,9 @@ public class ImageStorageServiceImpl implements ImageStorageService {
   /** Browsers load the category images directly from the bucket. */
   private String publicReadPolicy() {
     return """
-        {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":["*"]},\
-        "Action":["s3:GetObject"],"Resource":["arn:aws:s3:::%s/*"]}]}"""
+    {"Version":"2012-10-17","Statement":[{"Effect":"Allow","Principal":{"AWS":["*"]},\
+    "Action":["s3:GetObject"],"Resource":["arn:aws:s3:::%s/*"]}]}\
+    """
         .formatted(bucket);
   }
 

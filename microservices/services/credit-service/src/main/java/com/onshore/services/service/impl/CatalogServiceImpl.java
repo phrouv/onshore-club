@@ -49,14 +49,13 @@ public class CatalogServiceImpl implements CatalogService {
   @Transactional(readOnly = true)
   public List<CreditSettingDto> settings() {
     return settingRepository.findAll().stream()
-        .map(
-            s ->
-                new CreditSettingDto(
-                    s.getId(),
-                    s.getCreditsLow(),
-                    s.getCreditsNormal(),
-                    s.getCreditsHigh(),
-                    s.getDefaultPayout()))
+        .map(s ->
+            new CreditSettingDto(
+                s.getId(),
+                s.getCreditsLow(),
+                s.getCreditsNormal(),
+                s.getCreditsHigh(),
+                s.getDefaultPayout()))
         .toList();
   }
 

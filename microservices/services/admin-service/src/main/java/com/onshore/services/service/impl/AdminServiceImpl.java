@@ -56,10 +56,9 @@ public class AdminServiceImpl implements AdminService {
     UsageRule rule =
         ruleRepository
             .findById(id)
-            .orElseThrow(
-                () ->
-                    new ApiException(
-                        ClubExceptionType.USAGE_RULE_NOT_FOUND, "Usage rule not found: " + id));
+            .orElseThrow(() ->
+                new ApiException(
+                    ClubExceptionType.USAGE_RULE_NOT_FOUND, "Usage rule not found: " + id));
     UsageRuleMapper.update(rule, request);
     // maxUses null means unlimited, so it must be clearable.
     rule.setMaxUses(request.maxUses());
@@ -99,10 +98,8 @@ public class AdminServiceImpl implements AdminService {
   public List<UsageRuleInfo> enforcedRules() {
     return ruleRepository.findByActiveTrue().stream()
         .filter(r -> r.getMaxUses() != null)
-        .map(
-            r ->
-                new UsageRuleInfo(
-                    r.getScope(), r.getPartnerId(), r.getActivityId(), r.getMaxUses()))
+        .map(r ->
+            new UsageRuleInfo(r.getScope(), r.getPartnerId(), r.getActivityId(), r.getMaxUses()))
         .toList();
   }
 

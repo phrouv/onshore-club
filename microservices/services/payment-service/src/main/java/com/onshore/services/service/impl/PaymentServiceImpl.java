@@ -52,12 +52,11 @@ public class PaymentServiceImpl implements PaymentService {
       // Check if payment already exists for this booking
       paymentRepository
           .findByBookingId(request.getBookingId())
-          .ifPresent(
-              existingPayment -> {
-                if (existingPayment.getStatus() == PaymentStatus.SUCCESS) {
-                  throw new RuntimeException("Payment already completed for this booking");
-                }
-              });
+          .ifPresent(existingPayment -> {
+            if (existingPayment.getStatus() == PaymentStatus.SUCCESS) {
+              throw new RuntimeException("Payment already completed for this booking");
+            }
+          });
 
       // Create payment entity
       Payment payment =

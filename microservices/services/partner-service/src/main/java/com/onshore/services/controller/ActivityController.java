@@ -19,41 +19,35 @@ public class ActivityController {
 
   private final ActivityService activityService;
 
+  @PostMapping
+  public ResponseEntity<ActivityResponse> create(
+      @Valid @RequestBody ActivityRequest request,
+      @RequestHeader(value = "X-User-Roles", required = false) String roles) {
+    UserRole.requireAdmin(roles);
+    return ResponseEntity.status(HttpStatus.CREATED).body(activityService.create(request));
+  }
+
   @GetMapping
   public List<ActivityResponse> list(
-      @RequestParam(required = false) UUID partnerId,
-      @RequestParam(required = false) String category,
-      @RequestParam(required = false) Boolean active,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    return activityService.list(partnerId, category, active, showPayout(roles));
+    UserRole.requireAdmin(roles);
+    return activityService.list();
   }
 
   @GetMapping("/{id}")
   public ActivityResponse get(
       @PathVariable UUID id,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    return activityService.get(id, showPayout(roles));
-  }
-
-  @PostMapping
-  public ResponseEntity<ActivityResponse> create(
-      @Valid @RequestBody ActivityRequest request,
-      @RequestHeader("X-User-Id") UUID userId,
-      @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    return ResponseEntity.status(HttpStatus.CREATED)
-        .body(activityService.create(request, userId, UserRole.isAdmin(roles), showPayout(roles)));
+    UserRole.requireAdmin(roles);
+    return activityService.get(id);
   }
 
   @PutMapping("/{id}")
   public ActivityResponse update(
       @PathVariable UUID id,
       @Valid @RequestBody ActivityRequest request,
-      @RequestHeader("X-User-Id") UUID userId,
       @RequestHeader(value = "X-User-Roles", required = false) String roles) {
-    return activityService.update(id, request, userId, UserRole.isAdmin(roles), showPayout(roles));
-  }
-
-  private static boolean showPayout(String roles) {
-    return UserRole.isAdmin(roles) || UserRole.has(roles, UserRole.ROLE_PARTNER.name());
+    UserRole.requireAdmin(roles);
+    return activityService.update(id, request);
   }
 }

@@ -95,19 +95,16 @@ public class CategoryServiceImpl implements CategoryService {
     String normalized = CategoryMapper.normalizeCode(code);
     return categoryRepository
         .findByCode(normalized)
-        .orElseThrow(
-            () ->
-                new ApiException(
-                    ClubExceptionType.CATEGORY_NOT_FOUND, "Category not found: " + normalized));
+        .orElseThrow(() ->
+            new ApiException(
+                ClubExceptionType.CATEGORY_NOT_FOUND, "Category not found: " + normalized));
   }
 
   private Category findById(UUID id) {
     return categoryRepository
         .findById(id)
-        .orElseThrow(
-            () ->
-                new ApiException(
-                    ClubExceptionType.CATEGORY_NOT_FOUND, "Category not found: " + id));
+        .orElseThrow(() ->
+            new ApiException(ClubExceptionType.CATEGORY_NOT_FOUND, "Category not found: " + id));
   }
 
   /** Accepts a Base64 payload or a data URL holding a JPEG or PNG, and returns its stored URL. */

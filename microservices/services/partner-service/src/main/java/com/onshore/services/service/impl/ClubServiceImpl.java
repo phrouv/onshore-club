@@ -31,11 +31,10 @@ public class ClubServiceImpl implements ClubService {
     Partner partner =
         partnerRepository
             .findById(request.partnerId())
-            .orElseThrow(
-                () ->
-                    new ApiException(
-                        ClubExceptionType.PARTNER_NOT_FOUND,
-                        "Partner not found: " + request.partnerId()));
+            .orElseThrow(() ->
+                new ApiException(
+                    ClubExceptionType.PARTNER_NOT_FOUND,
+                    "Partner not found: " + request.partnerId()));
     if (partner.getStatus() != PartnerStatus.ACTIVE) {
       throw new ApiException(ClubExceptionType.PARTNER_NOT_ACTIVE, "Partner is not approved yet");
     }

@@ -1,14 +1,15 @@
 package com.onshore.services.model;
 
+import com.onshore.common_lib.enums.ActivityStatus;
+import com.onshore.common_lib.model.AbstractFullAuditingEntity;
+import com.onshore.common_lib.model.ContactPerson;
 import jakarta.persistence.*;
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.time.Instant;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import java.time.LocalDate;
 import java.util.UUID;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.domain.Persistable;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.hibernate.annotations.EmbeddedColumnNaming;
 
 @Entity
 @Getter
@@ -16,47 +17,38 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "activities")
-public class Activity implements Serializable, Persistable<UUID> {
+@Table(
+    name = "activities",
+    uniqueConstraints = {
+      @UniqueConstraint(
+          columnNames = {"club_id", "name"},
+          name = "uk_activity_club_name")
+    })
+public class Activity extends AbstractFullAuditingEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.UUID)
-  @Column(name = "id", columnDefinition = "uuid", updatable = false, nullable = false)
-  private UUID id;
+  @Column(name = "club_id", nullable = false)
+  private UUID clubId;
 
-  @Column(nullable = false)
-  private UUID partnerId;
+  @Column(name = "category_id", nullable = false)
+  private UUID categoryId;
 
-  @Column(nullable = false)
+  @NotNull(message = "name is required")
+  @Size(max = 100, message = "name must not exceed 100 characters")
+  @Column(name = "name", length = 100, nullable = false)
   private String name;
-
-  @Column(nullable = false)
-  private String category;
 
   @Column(columnDefinition = "text")
   private String description;
 
-  @Column(nullable = false)
+  @Embedded
+  @EmbeddedColumnNaming("instructor_%s")
+  private ContactPerson instructor;
+
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false, length = 20)
   @Builder.Default
-  private Integer durationMinutes = 60;
+  private ActivityStatus status = ActivityStatus.ACTIVE;
 
-  @Column(nullable = false)
-  @Builder.Default
-  private BigDecimal partnerPayout = new BigDecimal("5.00");
-
-  private Integer defaultCredits;
-
-  @Column(nullable = false)
-  @Builder.Default
-  private Boolean active = true;
-
-  @CreatedDate
-  @Column(updatable = false, nullable = false)
-  private Instant createdAt;
-
-  @Override
-  public boolean isNew() {
-    return this.id == null;
-  }
+  @Column(name = "subscription_date")
+  private LocalDate subscriptionDate;
 }

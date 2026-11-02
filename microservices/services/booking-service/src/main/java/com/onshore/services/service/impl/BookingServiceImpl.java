@@ -142,19 +142,17 @@ public class BookingServiceImpl implements BookingService {
             case ACTIVITY_PER_MONTH ->
                 klass.activityId().equals(rule.activityId())
                     ? mine.stream()
-                        .filter(
-                            b ->
-                                b.getActivityId().equals(klass.activityId())
-                                    && YearMonth.from(b.getClassDate()).equals(month))
+                        .filter(b ->
+                            b.getActivityId().equals(klass.activityId())
+                                && YearMonth.from(b.getClassDate()).equals(month))
                         .count()
                     : -1;
             case PARTNER_PER_MONTH ->
                 klass.partnerId().equals(rule.partnerId())
                     ? mine.stream()
-                        .filter(
-                            b ->
-                                b.getPartnerId().equals(klass.partnerId())
-                                    && YearMonth.from(b.getClassDate()).equals(month))
+                        .filter(b ->
+                            b.getPartnerId().equals(klass.partnerId())
+                                && YearMonth.from(b.getClassDate()).equals(month))
                         .count()
                     : -1;
           };
@@ -231,10 +229,9 @@ public class BookingServiceImpl implements BookingService {
     Booking booking =
         bookingRepository.findByCode(cleaned).stream()
             .findFirst()
-            .orElseThrow(
-                () ->
-                    new ApiException(
-                        ClubExceptionType.BOOKING_NOT_FOUND, "No booking matches this code"));
+            .orElseThrow(() ->
+                new ApiException(
+                    ClubExceptionType.BOOKING_NOT_FOUND, "No booking matches this code"));
     authorizePartner(booking.getPartnerId(), actorId, roles);
     requireNotCheckedIn(booking);
     requireConfirmed(booking);
@@ -358,10 +355,9 @@ public class BookingServiceImpl implements BookingService {
     Booking booking =
         bookingRepository
             .findById(bookingId)
-            .orElseThrow(
-                () ->
-                    new ApiException(
-                        ClubExceptionType.BOOKING_NOT_FOUND, "Booking not found: " + bookingId));
+            .orElseThrow(() ->
+                new ApiException(
+                    ClubExceptionType.BOOKING_NOT_FOUND, "Booking not found: " + bookingId));
     if (!booking.getUserId().equals(userId)) {
       throw new ApiException(
           ClubExceptionType.FORBIDDEN_OPERATION, "This booking belongs to another member");

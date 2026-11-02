@@ -1,18 +1,20 @@
 package com.onshore.services.payload;
 
-import java.math.BigDecimal;
+import com.onshore.common_lib.enums.ActivityStatus;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.UUID;
 
-/** partnerPayout is null for members: it is never shown outside partner/admin spaces. */
 public record ActivityResponse(
     UUID id,
-    UUID partnerId,
+    UUID clubId,
+    UUID categoryId,
     String name,
-    String category,
     String description,
-    Integer durationMinutes,
-    BigDecimal partnerPayout,
-    Integer defaultCredits,
-    boolean active,
+    String instructorFirstName,
+    String instructorLastName,
+    String instructorEmail,
+    String instructorPhoneNumber,
+    ActivityStatus status,
+    LocalDate subscriptionDate,
     Instant createdAt) {}

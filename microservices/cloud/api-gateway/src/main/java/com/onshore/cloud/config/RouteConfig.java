@@ -55,17 +55,16 @@ public class RouteConfig {
   @Bean
   public RouterFunction<ServerResponse> apiDocsRoutes() {
     return DOC_SERVICES.stream()
-        .map(
-            svc ->
-                GatewayRouterFunctions.route(svc + "-docs")
-                    .route(
-                        RequestPredicates.path("/docs/" + svc + "/v3/api-docs/**"),
-                        HandlerFunctions.http())
-                    .filter(LoadBalancerFilterFunctions.lb(svc))
-                    .before(
-                        BeforeFilterFunctions.rewritePath(
-                            "/docs/" + svc + "/(?<segment>.*)", "/${segment}"))
-                    .build())
+        .map(svc ->
+            GatewayRouterFunctions.route(svc + "-docs")
+                .route(
+                    RequestPredicates.path("/docs/" + svc + "/v3/api-docs/**"),
+                    HandlerFunctions.http())
+                .filter(LoadBalancerFilterFunctions.lb(svc))
+                .before(
+                    BeforeFilterFunctions.rewritePath(
+                        "/docs/" + svc + "/(?<segment>.*)", "/${segment}"))
+                .build())
         .reduce(RouterFunction::and)
         .orElseThrow();
   }

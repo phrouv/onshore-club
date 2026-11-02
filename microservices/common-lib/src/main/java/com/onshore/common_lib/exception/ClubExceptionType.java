@@ -23,6 +23,8 @@ public enum ClubExceptionType {
   PARTNER_ALREADY_EXISTS(409, "Partner already exists"),
   CATEGORY_ALREADY_EXISTS(409, "Category already exists"),
   CLUB_ALREADY_EXISTS(409, "Club already exists"),
+  ACTIVITY_ALREADY_EXISTS(409, "Activity already exists"),
+  CLUB_CLOSED(409, "Club closed"),
   PARTNER_NOT_ACTIVE(409, "Partner not active"),
   CLASS_CLOSED(409, "Class closed"),
   CLASS_PAST(409, "Class already past"),

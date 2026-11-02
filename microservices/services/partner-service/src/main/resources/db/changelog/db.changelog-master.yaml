@@ -231,3 +231,82 @@ databaseChangeLog:
             tableName: clubs
             columnNames: partner_id, name
             constraintName: uk_club_partner_name
+
+  - changeSet:
+      id: 004-recreate-activities-table
+      author: onshore
+      preConditions:
+        - onFail: MARK_RAN
+          tableExists:
+            tableName: activities
+      changes:
+        - dropTable:
+            tableName: activities
+        - createTable:
+            tableName: activities
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_activities
+                    nullable: false
+              - column:
+                  name: club_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: TEXT
+              - column:
+                  name: instructor_first_name
+                  type: VARCHAR(100)
+              - column:
+                  name: instructor_last_name
+                  type: VARCHAR(100)
+              - column:
+                  name: instructor_email
+                  type: VARCHAR(500)
+              - column:
+                  name: instructor_phone_number
+                  type: VARCHAR(100)
+              - column:
+                  name: status
+                  type: VARCHAR(20)
+                  defaultValue: ACTIVE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: subscription_date
+                  type: DATE
+              - column:
+                  name: created_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+                  defaultValueComputed: CURRENT_TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: last_modified_date
+                  type: TIMESTAMP WITHOUT TIME ZONE
+        - addUniqueConstraint:
+            tableName: activities
+            columnNames: club_id, name
+            constraintName: uk_activity_club_name
+        - addForeignKeyConstraint:
+            baseTableName: activities
+            baseColumnNames: club_id
+            constraintName: fk_activity_club
+            referencedTableName: clubs
+            referencedColumnNames: id

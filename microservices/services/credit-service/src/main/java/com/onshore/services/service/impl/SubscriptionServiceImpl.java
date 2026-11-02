@@ -44,10 +44,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         planRepository
             .findById(planId)
             .filter(Plan::getActive)
-            .orElseThrow(
-                () ->
-                    new ApiException(
-                        ClubExceptionType.PLAN_NOT_FOUND, "Plan not found: " + planId));
+            .orElseThrow(() ->
+                new ApiException(ClubExceptionType.PLAN_NOT_FOUND, "Plan not found: " + planId));
     LocalDate today = LocalDate.now();
     Subscription sub =
         subscriptionRepository
@@ -120,10 +118,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
   private Subscription active(UUID userId) {
     return subscriptionRepository
         .findFirstByUserIdAndStatusOrderByStartDateDesc(userId, SubscriptionStatus.ACTIVE)
-        .orElseThrow(
-            () ->
-                new ApiException(
-                    ClubExceptionType.SUBSCRIPTION_NOT_FOUND,
-                    "No active subscription for " + userId));
+        .orElseThrow(() ->
+            new ApiException(
+                ClubExceptionType.SUBSCRIPTION_NOT_FOUND, "No active subscription for " + userId));
   }
 }

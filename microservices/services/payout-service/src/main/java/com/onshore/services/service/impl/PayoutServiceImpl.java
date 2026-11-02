@@ -39,15 +39,14 @@ public class PayoutServiceImpl implements PayoutService {
     return payoutRepository
         .findByBookingId(request.bookingId())
         .map(PartnerPayoutMapper::toResponse)
-        .orElseGet(
-            () ->
-                PartnerPayoutMapper.toResponse(
-                    payoutRepository.save(
-                        PartnerPayout.builder()
-                            .partnerId(request.partnerId())
-                            .bookingId(request.bookingId())
-                            .amount(request.amount())
-                            .build())));
+        .orElseGet(() ->
+            PartnerPayoutMapper.toResponse(
+                payoutRepository.save(
+                    PartnerPayout.builder()
+                        .partnerId(request.partnerId())
+                        .bookingId(request.bookingId())
+                        .amount(request.amount())
+                        .build())));
   }
 
   @Override
@@ -71,10 +70,8 @@ public class PayoutServiceImpl implements PayoutService {
     PartnerPayout payout =
         payoutRepository
             .findById(id)
-            .orElseThrow(
-                () ->
-                    new ApiException(
-                        ClubExceptionType.PAYOUT_NOT_FOUND, "Payout not found: " + id));
+            .orElseThrow(() ->
+                new ApiException(ClubExceptionType.PAYOUT_NOT_FOUND, "Payout not found: " + id));
     payout.setStatus(status);
     payout.setPaymentDate(status == PayoutStatus.PAID ? LocalDate.now() : null);
     return PartnerPayoutMapper.toResponse(payoutRepository.save(payout));
@@ -87,13 +84,12 @@ public class PayoutServiceImpl implements PayoutService {
     Map<String, List<PartnerPayout>> byMonth =
         payoutRepository.findByPartnerId(partnerId).stream()
             .collect(
-                Collectors.groupingBy(
-                    p ->
-                        p.getCreatedAt()
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                            .toString()
-                            .substring(0, 7)));
+                Collectors.groupingBy(p ->
+                    p.getCreatedAt()
+                        .atZone(ZoneId.systemDefault())
+                        .toLocalDate()
+                        .toString()
+                        .substring(0, 7)));
     return byMonth.entrySet().stream()
         .sorted(Map.Entry.<String, List<PartnerPayout>>comparingByKey().reversed())
         .map(e -> summarize(partnerId, e.getKey(), e.getValue()))

@@ -116,11 +116,10 @@ public class CreditServiceImpl implements CreditService {
             .filter(s -> s.getId().equalsIgnoreCase(category.trim()))
             .findFirst()
             .or(() -> settingRepository.findById(FALLBACK_CATEGORY))
-            .orElseThrow(
-                () ->
-                    new ApiException(
-                        ClubExceptionType.CREDIT_SETTING_NOT_FOUND,
-                        "No credit setting for " + category));
+            .orElseThrow(() ->
+                new ApiException(
+                    ClubExceptionType.CREDIT_SETTING_NOT_FOUND,
+                    "No credit setting for " + category));
     return switch (demand) {
       case LOW -> setting.getCreditsLow();
       case NORMAL -> setting.getCreditsNormal();

@@ -50,10 +50,9 @@ public class PartnerServiceImpl implements PartnerService {
   public List<PartnerResponse> list(PartnerStatus status, String city) {
     return partnerRepository.findAll().stream()
         .filter(p -> status == null || p.getStatus() == status)
-        .filter(
-            p ->
-                city == null
-                    || (p.getAddress() != null && city.equalsIgnoreCase(p.getAddress().getCity())))
+        .filter(p ->
+            city == null
+                || (p.getAddress() != null && city.equalsIgnoreCase(p.getAddress().getCity())))
         .map(PartnerMapper::toResponse)
         .toList();
   }
@@ -86,8 +85,7 @@ public class PartnerServiceImpl implements PartnerService {
   private Partner find(UUID id) {
     return partnerRepository
         .findById(id)
-        .orElseThrow(
-            () ->
-                new ApiException(ClubExceptionType.PARTNER_NOT_FOUND, "Partner not found: " + id));
+        .orElseThrow(() ->
+            new ApiException(ClubExceptionType.PARTNER_NOT_FOUND, "Partner not found: " + id));
   }
 }
