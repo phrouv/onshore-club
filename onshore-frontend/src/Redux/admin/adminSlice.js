@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { activityService } from "../../services/activityService";
 import { adminService } from "../../services/adminService";
 import { clubService } from "../../services/clubService";
 import { creditService } from "../../services/creditService";
@@ -22,6 +23,22 @@ export const fetchAllPartners = createAsyncThunk(
 export const fetchAllActivities = createAsyncThunk(
   "admin/activities",
   guarded(() => partnerService.listActivities({})),
+);
+export const fetchActivities = createAsyncThunk(
+  "admin/fetchActivities",
+  guarded((params) => activityService.listActivities(params)),
+);
+export const saveActivity = createAsyncThunk(
+  "admin/saveActivity",
+  guarded(({ id, body }) =>
+    id
+      ? activityService.updateActivity(id, body)
+      : activityService.createActivity(body),
+  ),
+);
+export const setActivityStatus = createAsyncThunk(
+  "admin/setActivityStatus",
+  guarded(({ id, status }) => activityService.setActivityStatus(id, status)),
 );
 export const fetchClubs = createAsyncThunk(
   "admin/clubs",
@@ -141,6 +158,10 @@ const adminSlice = createSlice({
     users: [],
     partners: [],
     activities: [],
+    activitiesPage: 0,
+    activitiesSize: 20,
+    activitiesTotal: 0,
+    activitiesPages: 0,
     clubs: [],
     rules: [],
     settings: null,
@@ -165,6 +186,19 @@ const adminSlice = createSlice({
     });
     asyncCases(builder, fetchAllActivities, (state, { payload }) => {
       state.activities = payload;
+    });
+    asyncCases(builder, fetchActivities, (state, { payload }) => {
+      state.activities = payload.content;
+      state.activitiesPage = payload.number;
+      state.activitiesSize = payload.size;
+      state.activitiesTotal = payload.totalElements;
+      state.activitiesPages = payload.totalPages;
+    });
+    asyncCases(builder, saveActivity, (state, { payload }) => {
+      state.activities = upsert(state.activities, payload);
+    });
+    asyncCases(builder, setActivityStatus, (state, { payload }) => {
+      state.activities = upsert(state.activities, payload);
     });
     asyncCases(builder, fetchClubs, (state, { payload }) => {
       state.clubs = payload;

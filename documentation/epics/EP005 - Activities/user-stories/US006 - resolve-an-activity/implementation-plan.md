@@ -15,34 +15,33 @@ Implementation plan for the internal service-to-service resolution of an activit
 
 ### 1. Setup & Configuration
 
-- ⬜ Identify impacted modules: partner-service (owns `Activity`, `InternalController`, `ActivityMapper`), common-lib (`ActivityInfo` record)
-- ⬜ Confirm client-side vs server-side filtering/pagination strategy (if relevant) — current story: not applicable (single resolve fetch; no filtering/pagination)
-- ⬜ Verify naming conventions (API & DB specs)
-- ⬜ Check Liquibase master changelog inclusion needs (no new changelog — table recreated in US001)
-- ⬜ Additional libraries required? No
+- ✅ Identify impacted modules: partner-service (owns `Activity`, `InternalController`, `ActivityMapper`), common-lib (`ActivityInfo` record)
+- ✅ Confirm client-side vs server-side filtering/pagination strategy (if relevant) — current story: not applicable (single resolve fetch; no filtering/pagination)
+- ✅ Verify naming conventions (API & DB specs)
+- ✅ Check Liquibase master changelog inclusion needs (no new changelog — table recreated in US001)
+- ✅ Additional libraries required? No
 
 ### 2. Backend Implementation (Per Impacted Microservice)
 
 Microservice modules (`microservices/services/partner-service`):
 
-- ⬜ Create Entity(ies): `Activity` (already exists from US001 — no new fields)
-- ⬜ Repository: `ActivityRepository extends JpaRepository<Activity, UUID>` (no new methods — reuse `findById`; resolve `partnerId` via the club)
-- ⬜ Liquibase: no new changelog required (table recreated in US001)
-- ⬜ Alter the generated file to remove the 'drop existing foreign keys' and to add the added foreign keys because the liquibase plugin doesn't see any foreign keys. (not applicable — no new foreign keys in this story)
-- ⬜ Service: `ActivityService` in `service/` and its implementation `ActivityServiceImpl` in `service/impl/` (methods: `info` — activity lookup 404, derive `partnerId` from the club)
-- ⬜ DTO(s): `ActivityInfo` (common-lib record — updated to id, clubId, partnerId, name, categoryId, status)
-- ⬜ Mapper(s) (MapStruct): `ActivityMapper` (update `toInfo` — map `clubId`, `categoryId`, `status`, `partnerId` from the club)
-- ⬜ Controller(s): `InternalController` (endpoints: `GET /internal/activities/{id}` — already present, return type updated)
-- ⬜ Gateway: not applicable — `/internal/**` endpoints are never routed by the api-gateway
-- ⬜ Swagger annotations on DTOs & controller methods (not applicable — internal endpoint)
-- ⬜ Integration Tests:
-  - ⬜ 200 with data
-  - ⬜ 200 empty list
-  - ⬜ Error path (repository/service exception)
+- ✅ Create Entity(ies): `Activity` (already exists from US001 — no new fields)
+- ✅ Repository: `ActivityRepository extends JpaRepository<Activity, UUID>` (no new methods — reuse `findById`; resolve `partnerId` via the club)
+- ✅ Liquibase: no new changelog required (table recreated in US001)
+- ✅ Alter the generated file to remove the 'drop existing foreign keys' and to add the added foreign keys because the liquibase plugin doesn't see any foreign keys. (not applicable — no new foreign keys in this story)
+- ✅ Service: `ActivityService` in `service/` and its implementation `ActivityServiceImpl` in `service/impl/` (methods: `info` — activity lookup 404, derive `partnerId` from the club)
+- ✅ DTO(s): `ActivityInfo` (common-lib record — updated to id, clubId, partnerId, name, categoryId, status)
+- ✅ Mapper(s) (MapStruct): `ActivityMapper` (update `toInfo` — map `clubId`, `categoryId`, `status`, `partnerId` from the club)
+- ✅ Controller(s): `InternalController` (endpoints: `GET /internal/activities/{id}` — added)
+- ✅ Gateway: not applicable — `/internal/**` endpoints are never routed by the api-gateway
+- ✅ Swagger annotations on DTOs & controller methods (not applicable — internal endpoint)
+- ✅ Integration Tests:
+  - ✅ 200 with data (AC1 resolve)
+  - ✅ Error path (AC2 404 ACTIVITY_NOT_FOUND)
 
 ### 3. Frontend Implementation (`onshore-frontend`)
 
-- ⬜ Not applicable — service-to-service only; no UI.
+- ✅ Not applicable — service-to-service only; no UI.
 
 ### 4. Modified / New Files
 
@@ -78,4 +77,4 @@ Microservice modules (`microservices/services/partner-service`):
 ## Status
 
 - Status
-  - Overall: ⬜ NOT STARTED
+  - Overall: ✅ DONE

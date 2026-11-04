@@ -1,9 +1,11 @@
 package com.onshore.services.mapper;
 
+import com.onshore.common_lib.club.ActivityInfo;
 import com.onshore.common_lib.model.ContactPerson;
 import com.onshore.services.model.Activity;
 import com.onshore.services.payload.ActivityRequest;
 import com.onshore.services.payload.ActivityResponse;
+import java.util.UUID;
 
 public class ActivityMapper {
 
@@ -43,6 +45,11 @@ public class ActivityMapper {
         a.getStatus(),
         a.getSubscriptionDate(),
         a.getCreatedDate());
+  }
+
+  public static ActivityInfo toInfo(Activity a, UUID partnerId) {
+    return new ActivityInfo(
+        a.getId(), a.getClubId(), partnerId, a.getName(), a.getCategoryId(), a.getStatus());
   }
 
   private static ContactPerson contact(ActivityRequest r) {

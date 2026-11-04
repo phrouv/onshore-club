@@ -223,26 +223,26 @@ export default function AdminClubs() {
   return (
     <>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div>
-            <h1 className="text-2xl font-extrabold text-foreground">Clubs</h1>
-            <p className="text-sm text-muted-foreground">
-              Les clubs des partenaires
-            </p>
-          </div>
-          <div className="w-64">
-            <Select
-              placeholder="Tous les partenaires"
-              value={partnerId}
-              onChange={(e) => setPartnerId(e.target.value)}
-              options={activePartners.map((p) => ({
-                value: p.id,
-                label: p.name,
-              }))}
-            />
-          </div>
+        <div>
+          <h1 className="text-2xl font-extrabold text-foreground">Clubs</h1>
+          <p className="text-sm text-muted-foreground">
+            Les clubs des partenaires
+          </p>
         </div>
         <Button onClick={() => setCreating(true)}>+ Nouveau club</Button>
+      </div>
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <div className="w-64">
+          <Select
+            placeholder="Tous les partenaires"
+            value={partnerId}
+            onChange={(e) => setPartnerId(e.target.value)}
+            options={activePartners.map((p) => ({
+              value: p.id,
+              label: p.name,
+            }))}
+          />
+        </div>
       </div>
       <ClubModal
         open={creating}

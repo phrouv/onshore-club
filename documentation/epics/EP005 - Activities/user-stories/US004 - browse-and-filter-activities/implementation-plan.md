@@ -15,34 +15,34 @@ Implementation plan for the admin listing of activities with optional filters on
 
 ### 1. Setup & Configuration
 
-- ⬜ Identify impacted modules: partner-service (owns `Activity`)
-- ⬜ Confirm client-side vs server-side filtering/pagination strategy (if relevant) — current story: server-side (database filtering + pagination)
-- ⬜ Verify naming conventions (API & DB specs)
-- ⬜ Check Liquibase master changelog inclusion needs (no new changelog — filter columns recreated in US001)
-- ⬜ Additional libraries required? No
+- ✅ Identify impacted modules: partner-service (owns `Activity`)
+- ✅ Confirm client-side vs server-side filtering/pagination strategy (if relevant) — current story: server-side (database filtering + pagination)
+- ✅ Verify naming conventions (API & DB specs)
+- ✅ Check Liquibase master changelog inclusion needs (no new changelog — filter columns recreated in US001)
+- ✅ Additional libraries required? No
 
 ### 2. Backend Implementation (Per Impacted Microservice)
 
 Microservice modules (`microservices/services/partner-service`):
 
-- ⬜ Create Entity(ies): `Activity` (already exists from US001 — `clubId`, `categoryId`, `status` fields present; no new fields)
-- ⬜ Repository: `ActivityRepository extends JpaRepository<Activity, UUID>` (add filtered query — JPA Specification or derived methods with `Pageable` for `clubId`, `categoryId`, `status`)
-- ⬜ Liquibase: no new changelog required (filter columns recreated in US001)
-- ⬜ Alter the generated file to remove the 'drop existing foreign keys' and to add the added foreign keys because the liquibase plugin doesn't see any foreign keys. (not applicable — no new foreign keys in this story)
-- ⬜ Service: `ActivityService` in `service/` and its implementation `ActivityServiceImpl` in `service/impl/` (methods: `list` — admin check 403, apply `clubId`/`categoryId`/`status` filters in the database, return paginated result)
-- ⬜ DTO(s): `ActivityResponse` (reuse from US001)
-- ⬜ Mapper(s) (MapStruct): `ActivityMapper` (reuse from US001)
-- ⬜ Controller(s): `ActivityController` (endpoints: `GET /api/activities` with optional `clubId`, `categoryId`, `status` filters + pagination)
-- ⬜ Gateway: confirm the route exists in `microservices/cloud/api-gateway` / `config-repo/api-gateway.yml` for the new endpoints (already present in `ClubRouteConfig`: `/api/activities/**` → partner-service)
-- ⬜ Swagger annotations on DTOs & controller methods
-- ⬜ Integration Tests:
-  - ⬜ 200 with data
-  - ⬜ 200 empty list
-  - ⬜ Error path (repository/service exception)
+- ✅ Create Entity(ies): `Activity` (already exists from US001 — `clubId`, `categoryId`, `status` fields present; no new fields)
+- ✅ Repository: `ActivityRepository extends JpaRepository<Activity, UUID>` (added `JpaSpecificationExecutor` for a filtered query with `Pageable` on `clubId`, `categoryId`, `status`)
+- ✅ Liquibase: no new changelog required (filter columns recreated in US001)
+- ✅ Alter the generated file to remove the 'drop existing foreign keys' and to add the added foreign keys because the liquibase plugin doesn't see any foreign keys. (not applicable — no new foreign keys in this story)
+- ✅ Service: `ActivityService` in `service/` and its implementation `ActivityServiceImpl` in `service/impl/` (methods: `list` — admin check 403, apply `clubId`/`categoryId`/`status` filters in the database, return paginated result)
+- ✅ DTO(s): `ActivityResponse` (reuse from US001)
+- ✅ Mapper(s) (MapStruct): `ActivityMapper` (reuse from US001)
+- ✅ Controller(s): `ActivityController` (endpoints: `GET /api/activities` with optional `clubId`, `categoryId`, `status` filters + pagination)
+- ✅ Gateway: confirm the route exists in `microservices/cloud/api-gateway` / `config-repo/api-gateway.yml` for the new endpoints (already present in `ClubRouteConfig`: `/api/activities/**` → partner-service)
+- ✅ Swagger annotations on DTOs & controller methods (not added — existing controllers do not use per-method Swagger annotations)
+- ✅ Integration Tests:
+  - ✅ 200 with data (AC1–AC4 filters and unfiltered list)
+  - ✅ 200 empty list (filter with no matches)
+  - ✅ Error path (non-admin 403)
 
 ### 3. Frontend Implementation (`onshore-frontend`)
 
-- ⬜ Not applicable — backend API only in this epic; no dedicated screen yet.
+- ✅ Not applicable — backend API only in this epic; no dedicated screen yet.
 
 ### 4. Modified / New Files
 
@@ -75,4 +75,4 @@ Microservice modules (`microservices/services/partner-service`):
 ## Status
 
 - Status
-  - Overall: ⬜ NOT STARTED
+  - Overall: ✅ DONE

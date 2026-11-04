@@ -85,7 +85,7 @@
         <aws-sdk-bom.version>2.57.8</aws-sdk-bom.version>
 
         <!-- Plugins Versions -->
-        <spotless-maven-plugin.version>3.10.4</spotless-maven-plugin.version>
+        <spotless-maven-plugin.version>3.11.0</spotless-maven-plugin.version>
         <google-java-format.version>2.0.0</google-java-format.version>
         <git-build-hook-maven-plugin.version>3.6.0</git-build-hook-maven-plugin.version>
         <git-commit-id-maven-plugin.version>10.0.1</git-commit-id-maven-plugin.version>
@@ -267,7 +267,13 @@
                             <googleJavaFormat>
                                 <version>${google-java-format.version}</version>
                                 <style>GOOGLE</style>
+                                <reflowLongStrings>false</reflowLongStrings>
+                                <maxLineLength>100</maxLineLength>
+                                <formatJavadoc>true</formatJavadoc>
+                                <reorderImports>true</reorderImports>
+                                <cleanup>true</cleanup>
                             </googleJavaFormat>
+                            <removeUnusedImports />
                         </java>
                     </configuration>
                     <executions>

@@ -1,13 +1,7 @@
 package com.onshore.common_lib.club;
 
-import java.math.BigDecimal;
+import com.onshore.common_lib.enums.ActivityStatus;
 import java.util.UUID;
 
 public record ActivityInfo(
-    UUID id,
-    UUID partnerId,
-    String name,
-    String category,
-    BigDecimal partnerPayout,
-    Integer defaultCredits,
-    boolean active) {}
+    UUID id, UUID clubId, UUID partnerId, String name, UUID categoryId, ActivityStatus status) {}
